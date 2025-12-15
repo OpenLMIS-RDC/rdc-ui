@@ -1,0 +1,19 @@
+{
+  "name": "rdc-ui",
+  "version": "1.0.0-SNAPSHOT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OpenLMIS-RDC/rdc-ui"
+  },
+  "license": "AGPL-3.0",
+  "devDependencies": {
+    "dev-ui": "file:///dev-ui"
+  },
+  "config": {
+    "unsafe-perm": true
+  },
+  "scripts": {
+    "postinstall": "cp -nr node_modules/dev-ui/node_modules ."
+  },
+  "dependencies": {}
+}
