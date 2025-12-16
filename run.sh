@@ -1,4 +1,4 @@
-!/bin/sh
+#!/bin/sh
 envsubst "`printf '${%s} ' $(sh -c "env|cut -d'=' -f1")`" < /usr/share/nginx/html/openlmis.js > temp.js
 cat temp.js > /usr/share/nginx/html/openlmis.js
 
