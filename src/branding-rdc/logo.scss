@@ -1,0 +1,31 @@
+
+.header > .openlmis-header > .title,
+.header > .openlmis-header.is-offline > .title {
+	background-image: url('../assets/branding-rdc/logo-header-2.png') !important;
+	background-size: auto 60px;
+	text-indent: 0;
+	overflow: visible;
+	padding: 0 0 0 220px;
+	font-size: 20px;
+	flex: 0 0 790px;
+	margin-right: auto;
+	height: 80px;
+	align-content: center;
+}
+
+.header > .openlmis-header.is-offline > .title {
+	color: $white;
+}
+
+.auth-modal .modal-body {
+	background-image: url('../assets/branding-rdc/logo-header-1.png') !important;
+	background-size: 400px !important;
+	background-position: center top !important;
+	min-height: 258px + $space-size !important;
+	padding: 20% 25% 1em 25% !important;
+}
+
+.header > .openlmis-header > .openlmis-header-actions {
+  flex: 0 0 auto;
+  align-self: flex-start;
+}
