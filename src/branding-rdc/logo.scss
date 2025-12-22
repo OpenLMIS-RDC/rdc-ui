@@ -25,6 +25,10 @@
 	padding: 20% 25% 1em 25% !important;
 }
 
+.auth-modal .modal-header .locale-container > button {
+	white-space: nowrap;
+}
+
 .header > .openlmis-header > .openlmis-header-actions {
   flex: 0 0 auto;
   align-self: flex-start;
