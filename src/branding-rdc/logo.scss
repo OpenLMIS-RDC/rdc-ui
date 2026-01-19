@@ -1,35 +1,101 @@
 
 .header > .openlmis-header > .title,
 .header > .openlmis-header.is-offline > .title {
-	background-image: url('../assets/branding-rdc/logo-header-2.png') !important;
-	background-size: auto 60px;
+	background-image: url('../assets/branding-rdc/logo-header-3.png') !important;
+	background-size: auto 56px;
 	text-indent: 0;
 	overflow: visible;
-	padding: 0 0 0 220px;
-	font-size: 20px;
-	flex: 0 0 790px;
+	padding: 0 0 0 270px;
+	font-size: 16px;
+	color: #007FFF;
+	flex: 0 0 860px;
 	margin-right: auto;
-	height: 80px;
+	height: 66px;
 	align-content: center;
+}
+
+.header > .openlmis-header > .title::before,
+.header > .openlmis-header.is-offline > .title::before {
+    content: "LOGIMEV";
+    display: block;
+    color: #007fff;
+    font-size: 24px;
+    font-style: italic;
+    font-weight: bold;
+}
+
+.header > .openlmis-header {
+    padding: 0 2em;
 }
 
 .header > .openlmis-header.is-offline > .title {
 	color: $white;
 }
 
+.auth-modal .modal-content {
+  min-width: 800px;
+}
+
 .auth-modal .modal-body {
 	background-image: url('../assets/branding-rdc/logo-header-1.png') !important;
 	background-size: 400px !important;
-	background-position: center top !important;
+	background-position: $space-size*2 80px !important;
 	min-height: 258px + $space-size !important;
-	padding: 20% 25% 1em 25% !important;
 }
 
-.auth-modal .modal-header .locale-container > button {
-	white-space: nowrap;
+.auth-modal .modal-content {
+  background-image: radial-gradient(at 100% 20%, #007FFF 0px, #0000 50%),
+  radial-gradient(at 0% 100%, #F7D618 0px, transparent 50%),
+  radial-gradient(at 0% 20%, #CE1021 0px, transparent 50%),
+  radial-gradient(at 100% 100%, #007FFF 0px, transparent 50%) !important;
 }
 
-.header > .openlmis-header > .openlmis-header-actions {
-  flex: 0 0 auto;
-  align-self: flex-start;
+.auth-modal .modal-body::after {
+    content: "LOGIMEV";
+    position: absolute;
+    top: 210px;
+    left: 50px;
+    color: #007fff;
+    font-size: 50px;
+    font-style: italic;
+    font-weight: bold;
+}
+
+.auth-modal .modal-body::before {
+    content: "";
+    display: block;
+    position: absolute;
+    background-image: url('../assets/branding-rdc/logo-map.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 120px;
+    height: 120px;
+    margin-left: -80px;
+}
+
+.auth-modal .modal-body > form {
+  margin-top: 10%;
+  margin-left: auto;
+  width: 330px;
+}
+
+.auth-modal .modal-header > h1 {
+  color: #007fff;
+}
+
+.auth-modal .modal-header .navbar-nav > button {
+  min-width: 100px;
+}
+
+.auth-modal .modal-body #forgotPasswordLink {
+  color: black;
+}
+
+.auth-modal .modal-body #login-button {
+  background: #333;
+  background-image: unset;
+}
+
+.auth-modal .modal-footer > a {
+  color: black;
 }
