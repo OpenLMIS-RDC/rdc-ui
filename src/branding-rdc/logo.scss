@@ -3,12 +3,14 @@
 .header > .openlmis-header.is-offline > .title {
 	background-image: url('../assets/branding-rdc/logo-header-3.png') !important;
 	background-size: auto 56px;
+	display: flex;
+	align-items: center;
 	text-indent: 0;
 	overflow: visible;
 	padding: 0 0 0 270px;
 	font-size: 16px;
-	color: #007FFF;
-	flex: 0 0 860px;
+	color: black;
+	flex: 0 0 950px;
 	margin-right: auto;
 	height: 66px;
 	align-content: center;
@@ -17,11 +19,13 @@
 .header > .openlmis-header > .title::before,
 .header > .openlmis-header.is-offline > .title::before {
     content: "LOGIMEV";
+    font-family: "Amasis MT Pro Black", "Amasis MT Pro", serif;
     display: block;
     color: #007fff;
-    font-size: 24px;
+    font-size: 40px;
     font-style: italic;
     font-weight: bold;
+    margin-right: 16px;
 }
 
 .header > .openlmis-header {
@@ -32,13 +36,9 @@
 	color: $white;
 }
 
-.auth-modal .modal-content {
-  min-width: 800px;
-}
-
 .auth-modal .modal-body {
 	background-image: url('../assets/branding-rdc/logo-header-1.png') !important;
-	background-size: 400px !important;
+	background-size: 320px !important;
 	background-position: $space-size*2 80px !important;
 	min-height: 258px + $space-size !important;
 }
@@ -52,9 +52,10 @@
 
 .auth-modal .modal-body::after {
     content: "LOGIMEV";
+    font-family: "Amasis MT Pro Black", "Amasis MT Pro", serif;
     position: absolute;
-    top: 210px;
-    left: 50px;
+    top: 180px;
+    left: 56px;
     color: #007fff;
     font-size: 50px;
     font-style: italic;
@@ -68,9 +69,9 @@
     background-image: url('../assets/branding-rdc/logo-map.png');
     background-size: contain;
     background-repeat: no-repeat;
-    width: 120px;
-    height: 120px;
-    margin-left: -80px;
+    width: 100px;
+    height: 100px;
+    margin-left: -110px;
 }
 
 .auth-modal .modal-body > form {
@@ -80,7 +81,8 @@
 }
 
 .auth-modal .modal-header > h1 {
-  color: #007fff;
+  color: black;
+  font-size: 18px;
 }
 
 .auth-modal .modal-header .navbar-nav > button {
