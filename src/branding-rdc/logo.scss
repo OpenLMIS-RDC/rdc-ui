@@ -36,6 +36,18 @@
 	color: $white;
 }
 
+.header .openlmis-header-info openlmis-system-notifications-indicator {
+	display: none;
+}
+
+.header .openlmis-header-info .openlmis-app-cache {
+	display: none;
+}
+
+.auth-modal .modal-dialog {
+  margin-top: 12% !important;
+}
+
 .auth-modal .modal-body {
 	background-image: url('../assets/branding-rdc/logo-header-1.png') !important;
 	background-size: 320px !important;
