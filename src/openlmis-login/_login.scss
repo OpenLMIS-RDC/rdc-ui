@@ -9,7 +9,7 @@
 .password-icon {
     position: absolute;
     right: 10px;
-    top: 50%;
+    top: 17px;
     transform: translateY(-50%);
     cursor: pointer;
     color: #999;
@@ -20,4 +20,8 @@
 
 .password-icon:hover {
     color: #333;
+}
+
+.input-control.is-invalid ~ .password-icon {
+    right: 32px;
 }
