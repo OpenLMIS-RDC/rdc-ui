@@ -1,4 +1,6 @@
 {
   "openlmisHeader.appHeader": "Logistics Management Information System for Health Products in the Democratic Republic of Congo",
-  "openlmisLogin.appHeader": "Logistics Management Information System for Health Products in the Democratic Republic of Congo"
+  "openlmisLogin.appHeader": "Logistics Management Information System for Health Products in the Democratic Republic of Congo",
+
+  "stockReceiveCreation.manufactureDate": "Manufacture Date"
 }
