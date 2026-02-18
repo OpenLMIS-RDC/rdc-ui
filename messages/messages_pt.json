@@ -2,5 +2,6 @@
   "openlmisHeader.appHeader": "Sistema de Informação de Gestão Logística para Produtos de Saúde na República Democrática do Congo",
   "openlmisLogin.appHeader": "Sistema de Informação de Gestão Logística para Produtos de Saúde na República Democrática do Congo",
 
-  "stockReceiveCreation.manufactureDate": "Data de Fabrico"
+  "stockReceiveCreation.manufactureDate": "Data de Fabrico",
+  "stockPhysicalInventoryDraft.manufactureDate": "Data de Fabrico"
 }
