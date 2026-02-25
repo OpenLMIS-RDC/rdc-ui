@@ -3,5 +3,7 @@
   "openlmisLogin.appHeader": "Système d’Information de Gestion Logistique des Produits de Santé en République Démocratique du Congo",
 
   "stockReceiveCreation.manufactureDate": "Date de fabrication",
-  "stockPhysicalInventoryDraft.manufactureDate": "Date de fabrication"
+  "stockPhysicalInventoryDraft.manufactureDate": "Date de fabrication",
+  "stockAddProductsModal.newLotManufactureDate": "Date de fabrication",
+  "stockEditLotModal.manufactureDateInvalid": "La date de fabrication du lot doit être une date passée."
 }
