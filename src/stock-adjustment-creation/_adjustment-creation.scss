@@ -1,0 +1,30 @@
+.stock-adjustment-creation .is-primary {
+    display: block;
+    width: 100%;
+    padding-left: 0.5em;
+
+    .form-inline {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5em;
+        justify-content: flex-end;
+
+        > .new-lot-fields {
+            display: flex;
+            flex-wrap: nowrap;
+            align-items: center;
+            gap: 0.5em;
+            flex-basis: 100%;
+            justify-content: flex-end;
+        }
+    }
+
+    // Search form: hide keyword fieldset, show only Filter button
+    > form:not(.form-inline) {
+        display: inline;
+
+        > fieldset {
+            display: none;
+        }
+    }
+}
