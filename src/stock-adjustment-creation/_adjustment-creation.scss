@@ -1,5 +1,8 @@
 .stock-adjustment-creation .is-primary {
-    display: block;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 0.5em;
     width: 100%;
     padding-left: 0.5em;
 
@@ -7,24 +10,33 @@
         display: flex;
         flex-wrap: wrap;
         gap: 0.5em;
-        justify-content: flex-end;
+        align-items: flex-end;
+        flex: 1;
 
-        > .new-lot-fields {
+        > .new-lot-code-field {
+            display: flex;
+            align-items: center;
+            gap: 0.5em;
+        }
+
+        > .new-lot-date-fields {
             display: flex;
             flex-wrap: nowrap;
             align-items: center;
             gap: 0.5em;
-            flex-basis: 100%;
-            justify-content: flex-end;
         }
     }
 
-    // Search form: hide keyword fieldset, show only Filter button
-    > form:not(.form-inline) {
-        display: inline;
-
+    .search-form {
         > fieldset {
             display: none;
         }
+    }
+}
+
+@media (max-width: 62.5em) {
+    .stock-adjustment-creation .is-primary .form-inline > .new-lot-date-fields {
+        flex-basis: 100%;
+        justify-content: flex-end;
     }
 }
