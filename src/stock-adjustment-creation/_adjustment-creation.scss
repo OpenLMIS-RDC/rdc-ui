@@ -1,0 +1,42 @@
+.stock-adjustment-creation .is-primary {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 0.5em;
+    width: 100%;
+    padding-left: 0.5em;
+
+    .form-inline {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5em;
+        align-items: flex-end;
+        flex: 1;
+
+        > .new-lot-code-field {
+            display: flex;
+            align-items: center;
+            gap: 0.5em;
+        }
+
+        > .new-lot-date-fields {
+            display: flex;
+            flex-wrap: nowrap;
+            align-items: center;
+            gap: 0.5em;
+        }
+    }
+
+    .search-form {
+        > fieldset {
+            display: none;
+        }
+    }
+}
+
+@media (max-width: 62.5em) {
+    .stock-adjustment-creation .is-primary .form-inline > .new-lot-date-fields {
+        flex-basis: 100%;
+        justify-content: flex-end;
+    }
+}

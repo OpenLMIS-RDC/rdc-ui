@@ -4,14 +4,6 @@
 
 <div class="stock-adjustment-creation">
     <section class="openlmis-table-container">
-        <form ng-submit="vm.search()">
-            <fieldset>
-                <label for="search">{{vm.key('keyword') | message}}</label>
-                <input id="search" type="text" ng-model="vm.keyword" maxlength="50"/>
-            </fieldset>
-
-            <input type="submit" value="{{vm.key('search') | message}}"/>
-        </form>
         <section class="is-primary">
             <form class="form-inline" ng-submit="vm.addProduct()" name="productForm">
                 <div>
@@ -30,12 +22,14 @@
                         required>
                     </select>
                 </div>
-                <div ng-if="vm.hasPermissionToAddNewLot && vm.canAddNewLot">
+                <div class="new-lot-code-field" ng-if="vm.hasPermissionToAddNewLot && vm.canAddNewLot">
                     <label for="lotCode">{{'stockAddProductsModal.newLotCode' | message}}</label>
                     <input id="lotCode" type="text" ng-model="vm.newLot.lotCode"
                         ng-change="vm.newLotCodeChanged()"
                         openlmis-invalid="{{vm.newLot.lotCodeInvalid | message}}"
                         required>
+                </div>
+                <div class="new-lot-date-fields" ng-if="vm.hasPermissionToAddNewLot && vm.canAddNewLot">
                     <label for="expirationDate">{{'stockAddProductsModal.newLotExpirationDate' | message}}</label>
                     <input id="expirationDate" type="date" ng-model="vm.newLot.expirationDate"
                         ng-change="vm.expirationDateChanged()"
@@ -47,6 +41,13 @@
                         openlmis-invalid="{{vm.newLot.manufactureDateInvalid | message}}"/>
                 </div>
                 <button type="submit" class="add">{{vm.key('add') | message}}</button>
+            </form>
+            <form ng-submit="vm.search()" class="search-form">
+                <fieldset>
+                    <label for="search">{{vm.key('keyword') | message}}</label>
+                    <input id="search" type="text" ng-model="vm.keyword" maxlength="50"/>
+                </fieldset>
+                <input type="submit" value="{{vm.key('search') | message}}"/>
             </form>
         </section>
         <quantity-unit-toggle class="is-primary" quantity-unit="vm.quantityUnit"></quantity-unit-toggle>
