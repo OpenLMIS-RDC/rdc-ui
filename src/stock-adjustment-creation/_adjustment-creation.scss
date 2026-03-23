@@ -1,29 +1,32 @@
 .stock-adjustment-creation .is-primary {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-end;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: end;
     gap: 0.5em;
     width: 100%;
     padding-left: 0.5em;
 
+    button.filters {
+        width: fit-content;
+        grid-column: 1;
+    }
+
     .form-inline {
+        grid-column: 2;
         display: flex;
         flex-wrap: wrap;
         gap: 0.5em;
         align-items: flex-end;
         flex: 1;
+        justify-content: flex-end;
+    }
 
-        > .new-lot-code-field {
-            display: flex;
-            align-items: center;
-            gap: 0.5em;
-        }
+    quantity-unit-toggle {
+        grid-column: 3;
+        align-self: center;
 
-        > .new-lot-date-fields {
-            display: flex;
-            flex-wrap: nowrap;
-            align-items: center;
-            gap: 0.5em;
+        label {
+            margin-bottom: 0;
         }
     }
 
@@ -32,11 +35,30 @@
             display: none;
         }
     }
+
+    @media (max-width: 75em) {
+        button.filters {
+            grid-column: 1;
+            grid-row: 1;
+        }
+
+        .form-inline {
+            grid-column: 1;
+            grid-row: 2;
+            justify-content: flex-start;
+        }
+
+        quantity-unit-toggle {
+            grid-column: 1;
+            grid-row: 3;
+        }
+    }
 }
 
-@media (max-width: 62.5em) {
-    .stock-adjustment-creation .is-primary .form-inline > .new-lot-date-fields {
-        flex-basis: 100%;
-        justify-content: flex-end;
+.openlmis-table-container {
+    > .is-primary,
+    > quantity-unit-toggle {
+        display: inline-block;
+        vertical-align: bottom;
     }
 }
