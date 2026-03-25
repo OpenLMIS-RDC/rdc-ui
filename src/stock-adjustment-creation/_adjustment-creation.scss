@@ -1,0 +1,96 @@
+.stock-adjustment-creation .toolbar {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: end;
+    gap: 0.5em;
+    width: 100%;
+    padding-left: 0.5em;
+
+    button.filters {
+        width: fit-content;
+        grid-column: 1;
+        grid-row: 1;
+    }
+
+    .add-product-form {
+        grid-column: 2;
+        grid-row: 1;
+
+        .add-product-form-inputs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5em;
+            align-items: flex-end;
+            flex: 1;
+            justify-content: flex-end;
+        }
+    }
+
+    quantity-unit-toggle {
+        grid-column: 3;
+        grid-row: 1;
+
+        label {
+            margin-bottom: 0;
+        }
+    }
+
+    @media (max-width: 50em) {
+        .add-product-form {
+            grid-column: 1;
+            grid-row: 2;
+
+            form {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .add-product-form-inputs {
+                justify-content: flex-start;
+            }
+
+            button {
+                margin-top: 0.5em;
+            }
+        }
+
+        quantity-unit-toggle {
+            grid-column: 1;
+            grid-row: 3;
+            .button-toggle {
+                justify-content: flex-start
+            }
+        }
+    }
+}
+
+.stock-adjustment-creation .add-new-lot-form-visible .toolbar {
+    @media (max-width: 71em) {
+        .add-product-form {
+            grid-column: 1;
+            grid-row: 2;
+
+            form {
+                flex-direction: column;
+                align-items: flex-start;
+                max-width: 60em;
+            }
+
+            .add-product-form-inputs {
+                justify-content: flex-start;
+            }
+
+            button {
+                margin-top: 0.5em;
+            }
+        }
+
+        quantity-unit-toggle {
+            grid-column: 1;
+            grid-row: 3;
+            .button-toggle {
+                justify-content: flex-start
+            }
+        }
+    }
+}
