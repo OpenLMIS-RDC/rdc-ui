@@ -5,5 +5,7 @@
   "stockReceiveCreation.manufactureDate": "Data de Fabrico",
   "stockPhysicalInventoryDraft.manufactureDate": "Data de Fabrico",
   "stockAddProductsModal.newLotManufactureDate": "Data de Fabrico",
-  "stockEditLotModal.manufactureDateInvalid": "A data de Fabrico do lote deve ser uma data no passado."
+  "stockEditLotModal.manufactureDateInvalid": "A data de Fabrico do lote deve ser uma data no passado.",
+
+  "proofOfDeliveryView.quantityRejected": "Quantidade rejeitada"
 }
