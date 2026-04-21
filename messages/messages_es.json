@@ -7,5 +7,8 @@
   "stockAddProductsModal.newLotManufactureDate": "Fecha de fabricación",
   "stockEditLotModal.manufactureDateInvalid": "La fecha de fabricación del lote debe ser una fecha pasada.",
 
-  "proofOfDeliveryView.quantityRejected": "Cantidad rechazada"
+  "proofOfDeliveryView.quantityRejected": "Cantidad rechazada",
+
+  "requisitionView.createdDate": "Creado en",
+  "requisitionView.latestStatusChange": "Último cambio de estado"
 }
