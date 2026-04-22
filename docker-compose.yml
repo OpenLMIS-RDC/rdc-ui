@@ -40,7 +40,7 @@ services:
       - '/openlmis-auth-ui'
 
   fulfillment-ui:
-    image: openlmis/fulfillment-ui:6.1.8
+    image: openlmis/fulfillment-ui:6.1.9-SNAPSHOT
     volumes:
       - '/openlmis-fulfillment-ui'
 
@@ -60,7 +60,7 @@ services:
       - '/openlmis-requisition-ui'
 
   stockmanagement-ui:
-    image: openlmis/stockmanagement-ui:2.1.10
+    image: openlmis/stockmanagement-ui:2.1.11-SNAPSHOT
     volumes:
       - '/openlmis-stockmanagement-ui'
 
@@ -70,7 +70,7 @@ services:
       - '/openlmis-cce-ui'
 
   ui-components:
-    image: openlmis/ui-components:7.2.15
+    image: openlmis/ui-components:7.2.16-SNAPSHOT
     volumes:
       - '/openlmis-ui-components'
 
