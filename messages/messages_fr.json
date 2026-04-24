@@ -9,6 +9,8 @@
 
   "proofOfDeliveryView.quantityRejected": "Quantité rejetée",
 
+  "shipmentView.fillQuantityInPack": "Quantité à  expédier (conditionnement)",
+
   "requisitionView.createdDate": "Créé à",
   "requisitionView.latestStatusChange": "Dernier changement de statut"
 }
