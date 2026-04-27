@@ -10,5 +10,8 @@
   "proofOfDeliveryView.quantityRejected": "Quantidade rejeitada",
 
   "requisitionView.createdDate": "Criado em",
-  "requisitionView.latestStatusChange": "Última alteração de estado"
+  "requisitionView.latestStatusChange": "Última alteração de estado",
+
+  "stockConstants.stage3": "Fase 3",
+  "stockConstants.stage4": "Fase 4"
 }
