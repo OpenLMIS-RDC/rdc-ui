@@ -12,5 +12,8 @@
   "shipmentView.fillQuantityInPack": "Quantité à  expédier (conditionnement)",
 
   "requisitionView.createdDate": "Créé à",
-  "requisitionView.latestStatusChange": "Dernier changement de statut"
+  "requisitionView.latestStatusChange": "Dernier changement de statut",
+
+  "stockConstants.stage3": "Étape 3",
+  "stockConstants.stage4": "Étape 4"
 }
