@@ -12,6 +12,8 @@
   "requisitionView.createdDate": "Creado en",
   "requisitionView.latestStatusChange": "Último cambio de estado",
 
+  "stockConstants.stage1": "Etapa 1",
+  "stockConstants.stage2": "Etapa 2",
   "stockConstants.stage3": "Etapa 3",
   "stockConstants.stage4": "Etapa 4"
 }
