@@ -324,9 +324,12 @@
          * @param {Object} lineItem line item to be validated.
          */
         vm.validateReason = function(lineItem) {
+            /* ODRC-94 Require reason for issue / receive
             if (adjustmentType.state === 'adjustment') {
                 lineItem.$errors.reasonInvalid = isEmpty(lineItem.reason);
             }
+            */
+            lineItem.$errors.reasonInvalid = isEmpty(lineItem.reason);
             return lineItem;
         };
 
