@@ -75,7 +75,7 @@ services:
       - '/openlmis-ui-components'
 
   ui-layout:
-    image: openlmis/ui-layout:5.2.10
+    image: openlmis/ui-layout:5.2.11-SNAPSHOT
     volumes:
       - '/openlmis-ui-layout'
 
