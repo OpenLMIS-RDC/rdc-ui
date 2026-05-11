@@ -19,7 +19,7 @@
 
     angular
         .module('openlmis-analytics-ga4')
-        .constant('GA4_TAG', '@@GOOGLE_ANALYTICS_GA4_TAG')
+        .constant('GA4_TAG', '${GOOGLE_ANALYTICS_GA4_TAG}')
         .run(run);
 
     run.$inject = ['GA4_TAG', '$window', '$document'];

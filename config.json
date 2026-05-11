@@ -12,6 +12,5 @@
     "/openlmis-offline-ui",
     "/one-network-integration-ui"
   ],
-  "showRequisitionLessOrder": "true",
-  "googleAnalyticsGa4Tag": "G-CHANGE-ME"
+  "showRequisitionLessOrder": "true"
 }
