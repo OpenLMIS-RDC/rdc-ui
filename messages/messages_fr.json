@@ -21,6 +21,8 @@
   "stockConstants.stage3": "Étape 3",
   "stockConstants.stage4": "Étape 4",
 
+  "stockCard.soh": "Stock disponible",
+
   "oneNetworkIntegration.configuration": "One Network Integration",
 
   "reportParameter.startDate": "Date de début",
