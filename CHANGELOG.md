@@ -10,6 +10,7 @@
 * [ODRC-64](https://openlmis.atlassian.net/browse/ODRC-64) Allow user to define manufactureDate on new lot
 * [ODRC-64](https://openlmis.atlassian.net/browse/ODRC-64) Make receive view header responsive
 * [ODRC-66](https://openlmis.atlassian.net/browse/ODRC-66) Add VVM Status stages
+* [ODRC-79](https://openlmis.atlassian.net/browse/ODRC-79) Translate report parameters
 * [ODRC-87](https://openlmis.atlassian.net/browse/ODRC-87) Manage PoD change quantity returned to quantity rejected
 * [ODRC-89](https://openlmis.atlassian.net/browse/ODRC-89) Hide 'no lot defined' option in add products dropdowns
 * [ODRC-90](https://openlmis.atlassian.net/browse/ODRC-90) Remove packs/doses toggle in Manage PoD view
