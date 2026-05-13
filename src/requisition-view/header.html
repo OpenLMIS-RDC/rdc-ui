@@ -12,13 +12,15 @@
             <strong>{{'requisitionView.operatedBy' | message}}</strong>
             {{vm.facility.operator.name}}
         </li>
-        <li>
+        <!--ODRC-106 Geographic level misdisplay trough UI -->
+        <li ng-if="vm.facility.geographicZone.parent">
             <strong>{{'requisitionView.district' | message}}</strong>
-            {{vm.facility.geographicZone.name}}
-        </li>
-        <li>
-            <strong>{{'requisitionView.region' | message}}</strong>
             {{vm.facility.geographicZone.parent.name}}
+        </li>
+        <!--ODRC-106 Geographic level misdisplay trough UI -->
+        <li ng-if="vm.facility.geographicZone.parent.parent">
+            <strong>{{'requisitionView.region' | message}}</strong>
+            {{vm.facility.geographicZone.parent.parent.name}}
         </li>
         <!--ODRC-91 Requisition UI header - display creation date and modification date START -->
         <li>

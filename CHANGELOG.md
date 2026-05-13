@@ -17,3 +17,4 @@
 * [ODRC-91](https://openlmis.atlassian.net/browse/ODRC-91) Requisition UI header - display creation date and modification date
 * [ODRC-94](https://openlmis.atlassian.net/browse/ODRC-94) Require reason for issue / receive
 * [ODRC-101](https://openlmis.atlassian.net/browse/ODRC-101) Welcome Page UI update - remove status In Route from Orders panel
+* [ODRC-106](https://openlmis.atlassian.net/browse/ODRC-106) Geographic level misdisplay trough UI
