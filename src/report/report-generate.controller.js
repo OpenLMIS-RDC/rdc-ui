@@ -173,14 +173,24 @@
          */
         function watchDependency(param, dep) {
             var watchProperty = 'vm.selectedParamsOptions.' + dep.dependency;
-            $scope.$watch(watchProperty, function(newVal) {
-                vm.selectedParamsDependencies[dep.dependency] = newVal;
-                if (newVal) {
-                    reportFactory.getReportParamOptions(param, vm.selectedParamsDependencies)
-                        .then(function(items) {
-                            vm.paramsOptions[param.name] = items;
-                        });
+            // ODRC-100 Dependent filters for JASPER reports
+            $scope.$watch(watchProperty, function(newVal, oldVal) {
+                if (newVal === oldVal) {
+                    return;
                 }
+
+                var parentOption;
+                angular.forEach(vm.paramsOptions[dep.dependency] || [], function(o) {
+                    if (o.value === newVal) {
+                        parentOption = o;
+                    }
+                });
+                vm.selectedParamsDependencies[dep.dependency] = parentOption;
+
+                reportFactory.getReportParamOptions(param, vm.selectedParamsDependencies)
+                    .then(function(items) {
+                        vm.paramsOptions[param.name] = items;
+                    });
             });
         }
 
