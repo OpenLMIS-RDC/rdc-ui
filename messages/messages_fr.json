@@ -32,5 +32,6 @@
   "reportParameter.facilityType": "Type de Structure",
   "reportParameter.program": "Programme",
   "reportParameter.product": "Produit",
-  "reportParameter.geographicZone": "Zone Géographique"
+  "reportParameter.geographicZone": "Unité Organisation",
+  "reportParameter.geographicLevel": "Niveau  d’Organisation"
 }
