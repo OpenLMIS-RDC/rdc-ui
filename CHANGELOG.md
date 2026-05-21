@@ -19,3 +19,4 @@
 * [ODRC-100](https://openlmis.atlassian.net/browse/ODRC-100) Dependent filters for jasper reports
 * [ODRC-101](https://openlmis.atlassian.net/browse/ODRC-101) Welcome Page UI update - remove status In Route from Orders panel
 * [ODRC-106](https://openlmis.atlassian.net/browse/ODRC-106) Geographic level misdisplay trough UI
+* [ODRC-108](https://openlmis.atlassian.net/browse/ODRC-108) Requisition headers should be translated

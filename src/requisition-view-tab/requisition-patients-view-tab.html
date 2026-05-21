@@ -1,0 +1,102 @@
+<div class="view-tab openlmis-table-container">
+    <table>
+        <thead>
+            <tr>
+                <th class="col-{{vm.Columns.label}} col-sticky">
+                    {{:: 'requisitionViewTab.skip' | message}}
+                </th>
+                <th class="col-{{vm.Columns.label}} col-sticky col-width-250">
+                    {{:: 'requisitionPatientsViewTab.monthOfTreatment.label' | message}}
+                </th>
+                <th class="col-{{vm.Columns.label}}" ng-repeat="column in vm.Columns">
+                    {{vm.getLabelForColumn(column)}}
+                </th>
+            </tr>
+        </thead>
+        <tbody tbody-title="{{vm.TBTitle}}">
+            <tr ng-repeat="row in vm.TBRowsNew" ng-init="rowIndex=$index">
+                <td>
+                    <input type="checkbox" id="skipRowTB" ng-model="row.isSkipped"
+                           ng-disabled="row.isSkipDisabled || !vm.isEditingPatientsTabNotDisabled" 
+                           ng-change="vm.skipRow(vm.TBTitle, rowIndex)" />
+                </td>
+                <td>{{row.title | message}}</td>
+                <td ng-repeat="column in vm.Columns">
+                    <div class="input-control input-container" 
+                        openlmis-popover="{{row.data[$index].isInvalid ? 'This field is required' : undefined}}"
+                        ng-style="{'padding': '0px'}"
+                        ng-class="{
+                            'is-invalid': row.data[$index].isInvalid,
+                            'is-disabled': row.data[$index].disabled || row.isSkipped || !vm.isEditingPatientsTabNotDisabled,
+                            'is-focused': row.data[$index].isFocused
+                        }"
+                    >
+                        <input  
+                            ng-disabled="row.data[$index].disabled || row.isSkipped || !vm.isEditingPatientsTabNotDisabled"
+                            ng-model="row.data[$index].value" positive-integer
+                            ng-change="vm.handleSaveInLocalStorage(vm.TBTitle, vm.TBRowsNew);
+                            vm.canSkipRow(vm.TBTitle, rowIndex); vm.validate(vm.TBTitle, rowIndex)"
+                            name="{{row.title}}"
+                            ng-style="row.data[$index].isInvalid ? {'width' : '136px', 'margin': '7px'} : {'width': '150px', 'margin': '7px'}"
+                            ng-focus="vm.onFocus(vm.TBTitle, rowIndex, $index)"
+                            ng-blur="vm.onBlur(vm.TBTitle, rowIndex, $index)"
+                        />
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+        <tbody tbody-title="{{vm.LeprosyTitle}}">
+            <tr ng-repeat="row in vm.LeprosyRowsNew" ng-init="rowIndex=$index">
+                <td>
+                    <input type="checkbox" id="skipRowLeprosy" ng-model="row.isSkipped"
+                           ng-disabled="row.isSkipDisabled || !vm.isEditingPatientsTabNotDisabled"
+                           ng-change="vm.skipRow(vm.LeprosyTitle, rowIndex)" />
+                </td>
+                <td>{{row.title | message}}</td>
+                <td ng-repeat="column in vm.Columns">
+                    <div class="input-control input-container" 
+                        openlmis-popover="{{row.data[$index].isInvalid ? 'This field is required' : undefined}}"
+                        ng-class="{
+                            'is-invalid': row.data[$index].isInvalid,
+                            'is-disabled': row.data[$index].disabled || row.isSkipped || !vm.isEditingPatientsTabNotDisabled,
+                            'is-focused': row.data[$index].isFocused  
+                        }"
+                    >
+                        <input
+                            ng-disabled="row.data[$index].disabled || row.isSkipped || !vm.isEditingPatientsTabNotDisabled"
+                            ng-model="row.data[$index].value" positive-integer
+                            ng-change="vm.handleSaveInLocalStorage(vm.LeprosyTitle, vm.LeprosyRowsNew);
+                            vm.canSkipRow(vm.LeprosyTitle, rowIndex); vm.validate(vm.LeprosyTitle, rowIndex, row)"
+                            name="{{row.title}}"
+                            ng-style="row.data[$index].isInvalid ? {'width' : '136px'} : {'width': '150px'}"
+                            ng-focus="vm.onFocus(vm.LeprosyTitle, rowIndex, $index)"
+                            ng-blur="vm.onBlur(vm.LeprosyTitle, rowIndex, $index)"
+                        />
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div class="openlmis-pagination">
+    <div class="pagination-info">
+        {{:: 'openlmisPagination.showingItemsOutOf' | message: {'items': vm.numberOfItemsInTheTable, 'total':
+        vm.numberOfItemsInTheTable} }}
+    </div>
+    <ul>
+        <li class="disabled">
+            <a>
+                {{:: 'openlmisPagination.previous' | message}}
+            </a>
+        </li>
+        <li class="active" ng-class="{invalid: vm.isFormInvalid}">
+            <a>1</a>
+        </li>
+        <li class="disabled">
+            <a>
+                {{:: 'openlmisPagination.next' | message}}
+            </a>
+        </li>
+    </ul>
+</div>
+</div>
