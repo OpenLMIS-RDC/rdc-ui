@@ -11,6 +11,8 @@
 
   "proofOfDeliveryView.quantityRejected": "Quantity Rejected",
 
+  "requisitionView.geographicZoneLevel": "Geographic level",
+  "requisitionView.geographicZone": "Geographic zone",
   "requisitionView.createdDate": "Created at",
   "requisitionView.latestStatusChange": "Latest status change",
 

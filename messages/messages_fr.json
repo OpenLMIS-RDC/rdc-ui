@@ -1,7 +1,7 @@
 {
   "openlmisHeader.appHeader": "Système d’Information de Gestion Logistique des Produits de Santé en République Démocratique du Congo",
   "openlmisLogin.appHeader": "Système d’Information de Gestion Logistique des Produits de Santé en République Démocratique du Congo",
-  "openlmisHome.welcome": "Bienvenue au\nSysteme d'Information de Gestion Logistique",
+  "openlmisHome.welcome": "Bienvenue au\nSysteme d’Information de Gestion Logistique",
 
   "stockReceiveCreation.manufactureDate": "Date de fabrication",
   "stockIssueCreation.manufactureDate": "Date de fabrication",
@@ -14,7 +14,9 @@
 
   "shipmentView.fillQuantityInPack": "Quantité à  expédier (conditionnement)",
 
-  "requisitionView.createdDate": "Créé à",
+  "requisitionView.geographicZoneLevel": "Niveau d’organisation",
+  "requisitionView.geographicZone": "Unité d’organisation",
+  "requisitionView.createdDate": "Date de création",
   "requisitionView.latestStatusChange": "Dernier changement de statut",
 
   "stockConstants.stage1": "Étape 1",
@@ -62,7 +64,7 @@
   "requisition.columnLabel.calculatedOrderQuantity": "Quantité de commande calculée",
   "requisition.columnLabel.beginningBalance": "Solde initial",
   "requisition.columnLabel.quantityToIssue": "Quantité à livrer (G) G = F - A",
-  "requisition.columnLabel.totalQuantityNeededByHf": "Quantité totale requise par l'établissement (F) F = E * 2",
+  "requisition.columnLabel.totalQuantityNeededByHf": "Quantité totale requise par l’établissement (F) F = E * 2",
   "requisition.columnLabel.pricePerPack": "Prix par conditionnement",
   "requisition.columnLabel.totalConsumedQuantity": "Quantité totale consommée",
   "requisition.columnLabel.totalRequirement": "Besoin total (E) E = C * D",
