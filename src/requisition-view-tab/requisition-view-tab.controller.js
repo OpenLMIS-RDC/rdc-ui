@@ -302,12 +302,15 @@
          * @return {string}                    the translated description of the column
          */
         function getDescriptionForColumn(column) {
+            var key = 'requisition.columnDescription.' + column.name;
+            var translated = messageService.get(key);
+            var translatedDescription = translated === key ? column.definition : translated;
             if (requisition.template.populateStockOnHandFromStockCards &&
                 column.name === TEMPLATE_COLUMNS.TOTAL_LOSSES_AND_ADJUSTMENTS) {
-                return column.definition + ' ' +
+                return translatedDescription + ' ' +
                     messageService.get('requisitionViewTab.totalLossesAndAdjustment.disabled');
             }
-            return column.definition;
+            return translatedDescription;
         }
 
         /**
