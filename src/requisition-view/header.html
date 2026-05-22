@@ -13,13 +13,13 @@
             {{vm.facility.operator.name}}
         </li>
         <!--ODRC-106 Geographic level misdisplay trough UI -->
-        <li ng-if="vm.facility.geographicZone.parent.level">
+        <li ng-if="vm.facility.geographicZone.level">
             <strong>{{'requisitionView.geographicZoneLevel' | message}}</strong>
-            {{vm.facility.geographicZone.parent.level.name}}
+            {{vm.facility.geographicZone.level.name}}
         </li>
-        <li ng-if="vm.facility.geographicZone.parent">
+        <li ng-if="vm.facility.geographicZone">
             <strong>{{'requisitionView.geographicZone' | message}}</strong>
-            {{vm.facility.geographicZone.parent.name}}
+            {{vm.facility.geographicZone.name}}
         </li>
         <!--ODRC-91 Requisition UI header - display creation date and modification date START -->
         <li>
