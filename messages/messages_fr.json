@@ -35,8 +35,8 @@
   "reportParameter.facilityType": "Type de Structure",
   "reportParameter.program": "Programme",
   "reportParameter.product": "Produit",
-  "reportParameter.geographicZone": "Unité Organisation",
-  "reportParameter.geographicLevel": "Niveau  d’Organisation",
+  "reportParameter.geographicZone": "Unité d’Organisation",
+  "reportParameter.geographicLevel": "Niveau d’Organisation",
 
   "requisition.columnLabel.total": "Total",
   "requisition.columnLabel.stockOnHand": "Stock disponible",
