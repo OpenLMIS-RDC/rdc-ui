@@ -40,12 +40,12 @@ services:
       - '/openlmis-auth-ui'
 
   fulfillment-ui:
-    image: openlmis/fulfillment-ui:6.1.9-SNAPSHOT
+    image: openlmis/fulfillment-ui:6.1.9
     volumes:
       - '/openlmis-fulfillment-ui'
 
   referencedata-ui:
-    image: openlmis/referencedata-ui:5.6.19-SNAPSHOT
+    image: openlmis/referencedata-ui:5.6.19
     volumes:
       - '/openlmis-referencedata-ui'
 
@@ -55,22 +55,22 @@ services:
       - '/openlmis-report-ui'
 
   requisition-ui:
-    image: openlmis/requisition-ui:7.0.17-SNAPSHOT
+    image: openlmis/requisition-ui:7.0.17
     volumes:
       - '/openlmis-requisition-ui'
 
   stockmanagement-ui:
-    image: openlmis/stockmanagement-ui:2.1.11-SNAPSHOT
+    image: openlmis/stockmanagement-ui:2.1.11
     volumes:
       - '/openlmis-stockmanagement-ui'
 
   cce-ui:
-    image: openlmis/cce-ui:1.1.11-SNAPSHOT
+    image: openlmis/cce-ui:1.1.11
     volumes:
       - '/openlmis-cce-ui'
 
   ui-components:
-    image: openlmis/ui-components:7.2.16-SNAPSHOT
+    image: openlmis/ui-components:7.2.16
     volumes:
       - '/openlmis-ui-components'
 
