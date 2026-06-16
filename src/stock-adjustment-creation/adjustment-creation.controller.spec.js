@@ -331,6 +331,7 @@ describe('StockAdjustmentCreationController', function() {
                     .build())
                 .withStockOnHand(2)
                 .build();
+            vm.selectedLot = vm.selectedOrderableGroup[0].lot;
             vm.addProduct();
         });
 
@@ -348,6 +349,7 @@ describe('StockAdjustmentCreationController', function() {
                     .build())
                 .withStockOnHand(10)
                 .build();
+            vm.selectedLot = vm.selectedOrderableGroup[0].lot;
             vm.addProduct();
 
             var addedLineItem = vm.addedLineItems[0];
@@ -355,6 +357,59 @@ describe('StockAdjustmentCreationController', function() {
             expect(addedLineItem.stockOnHand).toEqual(10);
             expect(addedLineItem.orderable.fullProductName).toEqual('Adsorbentia');
             expect(addedLineItem.occurredDate).toEqual(vm.addedLineItems[1].occurredDate);
+        });
+
+        it('should not add a product when no lot is selected nor a new lot created', function() {
+            vm.addedLineItems = [];
+            vm.selectedLot = null;
+            vm.newLot = {
+                active: true
+            };
+
+            vm.addProduct();
+
+            expect(vm.addedLineItems.length).toEqual(0);
+        });
+
+        it('should add a product when a new lot code has been entered', function() {
+            vm.addedLineItems = [];
+            vm.selectedOrderableGroup = new OrderableGroupDataBuilder()
+                .withOrderable(new OrderableDataBuilder().withFullProductName('Implanon')
+                    .build())
+                .withStockOnHand(2)
+                .build();
+            vm.selectedLot = null;
+            vm.newLot = {
+                lotCode: 'NewLot001',
+                active: true
+            };
+
+            vm.addProduct();
+
+            expect(vm.addedLineItems.length).toEqual(1);
+        });
+    });
+
+    describe('orderableSelectionChanged with lot enforcement', function() {
+
+        it('should not block adding when the selected product has lots', function() {
+            vm.selectedOrderableGroup = new OrderableGroupDataBuilder().build();
+
+            vm.orderableSelectionChanged();
+
+            expect(vm.cannotAddWithoutLot).toBe(false);
+        });
+
+        it('should block adding when the product has no lots and user cannot add a new lot', function() {
+            vm = initController(orderableGroups, undefined, false);
+            vm.selectedOrderableGroup = [{
+                orderable: new OrderableDataBuilder().build(),
+                stockOnHand: 5
+            }];
+
+            vm.orderableSelectionChanged();
+
+            expect(vm.cannotAddWithoutLot).toBe(true);
         });
     });
 
@@ -592,7 +647,7 @@ describe('StockAdjustmentCreationController', function() {
         });
     });
 
-    function initController(orderableGroups, adjustmentType) {
+    function initController(orderableGroups, adjustmentType, hasPermissionToAddNewLot) {
         return $controller('StockAdjustmentCreationController', {
             $scope: scope,
             $state: state,
@@ -605,7 +660,7 @@ describe('StockAdjustmentCreationController', function() {
             reasons: reasons,
             orderableGroups: orderableGroups,
             displayItems: [],
-            hasPermissionToAddNewLot: true,
+            hasPermissionToAddNewLot: hasPermissionToAddNewLot === undefined ? true : hasPermissionToAddNewLot,
             editLotModalService: this.editLotModalService
         });
     }

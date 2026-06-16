@@ -367,6 +367,42 @@ describe('AddProductsModalController', function() {
             expect(scope.productForm.$setPristine).toHaveBeenCalled();
             expect(scope.productForm.$setUntouched).toHaveBeenCalled();
         });
+
+        it('should not block adding when the selected product has lots', function() {
+            vm.selectedOrderableGroup = [item1];
+
+            vm.orderableSelectionChanged();
+
+            expect(vm.cannotAddWithoutLot).toBe(false);
+        });
+
+        it('should block adding when the product has no lots and user cannot add a new lot', function() {
+            vm.hasPermissionToAddNewLot = false;
+            vm.selectedOrderableGroup = [{
+                orderable: orderable,
+                stockOnHand: 5
+            }];
+
+            vm.orderableSelectionChanged();
+
+            expect(vm.cannotAddWithoutLot).toBe(true);
+        });
+    });
+
+    describe('addOneProduct lot enforcement', function() {
+
+        it('should not add a product when no lot is selected nor a new lot created', function() {
+            vm.selectedOrderableGroup = [{
+                orderable: orderable,
+                stockOnHand: 5
+            }];
+            vm.selectedLot = null;
+            vm.addedItems = [];
+
+            vm.addOneProduct();
+
+            expect(vm.addedItems).toEqual([]);
+        });
     });
 
     describe('lotChanged', function() {

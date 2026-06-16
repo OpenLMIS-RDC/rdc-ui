@@ -7,6 +7,7 @@
   "stockPhysicalInventoryDraft.manufactureDate": "Fecha de fabricación",
   "stockAddProductsModal.newLotManufactureDate": "Fecha de fabricación",
   "stockEditLotModal.manufactureDateInvalid": "La fecha de fabricación del lote debe ser una fecha pasada.",
+  "stockAddProductsModal.noLotsNoPermission": "Este producto no tiene lotes definidos.",
 
   "proofOfDeliveryView.quantityRejected": "Cantidad rechazada",
 

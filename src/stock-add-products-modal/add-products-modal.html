@@ -49,7 +49,10 @@
                       ng-change="vm.manufactureDateChanged()"
                       openlmis-invalid="{{vm.newLot.manufactureDateInvalid | message}}"/>
            </div>
-          <button type="submit" class="add">{{'stockAddProductsModal.add' | message}}</button>
+          <div ng-if="vm.cannotAddWithoutLot" class="alert is-error add-product-no-lots-message">
+            {{'stockAddProductsModal.noLotsNoPermission' | message}}
+          </div>
+          <button type="submit" class="add" ng-disabled="vm.cannotAddWithoutLot">{{'stockAddProductsModal.add' | message}}</button>
         </form>
         <section class="openlmis-table-container">
           <table>

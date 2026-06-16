@@ -51,8 +51,11 @@
                                ng-change="vm.manufactureDateChanged()"
                                openlmis-invalid="{{vm.newLot.manufactureDateInvalid | message}}"/>
                     </div>
+                    <div ng-if="vm.cannotAddWithoutLot" class="alert is-error add-product-no-lots-message">
+                        {{'stockAddProductsModal.noLotsNoPermission' | message}}
+                    </div>
                 </div>
-                <button type="submit" class="add">{{vm.key('add') | message}}</button>
+                <button type="submit" class="add" ng-disabled="vm.cannotAddWithoutLot">{{vm.key('add') | message}}</button>
             </form>
         </section>
         <quantity-unit-toggle class="is-primary" quantity-unit="vm.quantityUnit"></quantity-unit-toggle>

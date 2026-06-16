@@ -131,6 +131,7 @@
             vm.selectedOrderableHasLots = false;
             vm.hasPermissionToAddNewLot = hasPermissionToAddNewLot;
             vm.canAddNewLot = false;
+            vm.cannotAddWithoutLot = false;
 
             initiateNewLotObject();
 
@@ -165,6 +166,28 @@
             vm.lots = orderableGroupService.lotsOf(vm.selectedOrderableGroup, vm.hasPermissionToAddNewLot);
 
             vm.selectedOrderableHasLots = vm.lots.length > 0;
+
+            // RDC customization ODRC-89: a product can only be added with a lot. When the selected
+            // product has no lots and the user has no permission to add a new lot, it cannot be added.
+            vm.cannotAddWithoutLot = !!vm.selectedOrderableGroup && !vm.selectedOrderableHasLots;
+        }
+
+        /**
+         * @ngdoc method
+         * @methodOf stock-add-products-modal.controller:AddProductsModalController
+         * @name isLotMissing
+         *
+         * @description
+         * Returns true when no existing lot is selected and no new lot code has been entered,
+         * meaning the product cannot be added.
+         *
+         * @return {boolean} true if no lot is selected or created
+         */
+        function isLotMissing() {
+            var addMissingLotCode = messageService.get('orderableGroupService.addMissingLot');
+            var hasExistingLotSelected = vm.selectedLot && vm.selectedLot.lotCode !== addMissingLotCode;
+            var hasNewLotCode = vm.newLot && vm.newLot.lotCode;
+            return !hasExistingLotSelected && !hasNewLotCode;
         }
 
         /**
@@ -177,6 +200,13 @@
          */
         function addOneProduct() {
             var selectedItem;
+
+            // RDC customization ODRC-89: never allow adding a product without a lot.
+            // When the product has no lots defined and the user cannot add a new lot,
+            // or when no lot has been selected, adding is blocked.
+            if (isLotMissing()) {
+                return;
+            }
 
             if (vm.selectedOrderableGroup && vm.selectedOrderableGroup.length) {
                 vm.newLot.tradeItemId = vm.selectedOrderableGroup[0].orderable.identifiers.tradeItem;

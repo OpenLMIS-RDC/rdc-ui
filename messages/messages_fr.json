@@ -9,6 +9,7 @@
   "stockAddProductsModal.newLotManufactureDate": "Date de fabrication",
   "stockAdjustmentCreation.manufactureDate": "Date de fabrication",
   "stockEditLotModal.manufactureDateInvalid": "La date de fabrication du lot doit être une date passée.",
+  "stockAddProductsModal.noLotsNoPermission": "Ce produit n’a aucun lot défini.",
 
   "proofOfDeliveryView.quantityRejected": "Quantité rejetée",
 
