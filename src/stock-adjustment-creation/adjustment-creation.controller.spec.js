@@ -35,6 +35,8 @@ describe('StockAdjustmentCreationController', function() {
                 set: function() {},
                 get: function() {}
             });
+            $provide.value('tradeItemManufacturerService',
+                jasmine.createSpyObj('tradeItemManufacturerService', ['prefetch', 'getManufacturer']));
         });
 
         inject(function($injector) {

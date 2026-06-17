@@ -1,4 +1,8 @@
 {
+  "stockReceiveCreation.manufacturer": "الشركة المصنّعة",
+  "stockIssueCreation.manufacturer": "الشركة المصنّعة",
+  "stockPhysicalInventoryDraft.manufacturer": "الشركة المصنّعة",
+  "stockAdjustmentCreation.manufacturer": "الشركة المصنّعة",
   "stockAddProductsModal.noLotsNoPermission": "لا توجد دفعات محددة لهذا المنتج.",
   "stockConstants.stage1": "المرحلة 1",
   "stockConstants.stage2": "المرحلة 2",

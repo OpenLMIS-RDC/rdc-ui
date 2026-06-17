@@ -68,6 +68,7 @@
                     <th ng-show="vm.hasLot">{{vm.key('lotCode') | message}}</th>
                     <th ng-show="vm.hasLot">{{vm.key('expiryDate') | message}}</th>
                     <th ng-show="vm.hasLot">{{vm.key('manufactureDate') | message}}</th>
+                    <th ng-show="vm.hasLot">{{vm.key('manufacturer') | message}}</th>
                     <th>{{vm.showInDoses() ? vm.key('sohDoses') : vm.key('sohPacks') | message}}</th>
                     <th ng-show="vm.srcDstAssignments">{{vm.key('srcDstLabel') | message}}</th>
                     <th ng-show="vm.srcDstAssignments">{{vm.key('srcDstComments') | message}}</th>
@@ -94,6 +95,9 @@
                     </td>
                     <td ng-show="vm.hasLot">{{vm.formatDate(lineItem.lot.expirationDate) | message}}</td>
                     <td ng-show="vm.hasLot">{{vm.formatDate(lineItem.lot.manufactureDate) | message}}</td>
+                    <td ng-show="vm.hasLot">
+                        <rdc-manufacturer orderable="lineItem.orderable" lot="lineItem.lot"></rdc-manufacturer>
+                    </td>
                     <td align="right">{{vm.recalculateSOHQuantity(lineItem.$previewSOH, lineItem.orderable.netContent)}}</td>
                     <td ng-show="vm.srcDstAssignments" openlmis-invalid="{{lineItem.$errors.assignmentInvalid ? 'openlmisForm.required' : '' | message}}">
                         <select ng-model="lineItem.assignment"

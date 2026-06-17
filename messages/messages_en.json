@@ -3,10 +3,14 @@
   "openlmisLogin.appHeader": "Logistics Management Information System for Health Products in the Democratic Republic of Congo",
 
   "stockReceiveCreation.manufactureDate": "Manufacture Date",
+  "stockReceiveCreation.manufacturer": "Manufacturer",
   "stockIssueCreation.manufactureDate": "Manufacture Date",
+  "stockIssueCreation.manufacturer": "Manufacturer",
   "stockPhysicalInventoryDraft.manufactureDate": "Manufacture Date",
+  "stockPhysicalInventoryDraft.manufacturer": "Manufacturer",
   "stockAddProductsModal.newLotManufactureDate": "Manufacture Date",
   "stockAdjustmentCreation.manufactureDate": "Manufacture Date",
+  "stockAdjustmentCreation.manufacturer": "Manufacturer",
   "stockEditLotModal.manufactureDateInvalid": "Lot manufacture date should be a past date.",
   "stockAddProductsModal.noLotsNoPermission": "This product has no lots defined.",
 

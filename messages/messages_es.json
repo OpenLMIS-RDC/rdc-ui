@@ -3,8 +3,12 @@
   "openlmisLogin.appHeader": "Sistema de Información de Gestión Logística de Productos Sanitarios en la República Democrática del Congo",
 
   "stockReceiveCreation.manufactureDate": "Fecha de fabricación",
+  "stockReceiveCreation.manufacturer": "Fabricante",
   "stockIssueCreation.manufactureDate": "Fecha de fabricación",
+  "stockIssueCreation.manufacturer": "Fabricante",
   "stockPhysicalInventoryDraft.manufactureDate": "Fecha de fabricación",
+  "stockPhysicalInventoryDraft.manufacturer": "Fabricante",
+  "stockAdjustmentCreation.manufacturer": "Fabricante",
   "stockAddProductsModal.newLotManufactureDate": "Fecha de fabricación",
   "stockEditLotModal.manufactureDateInvalid": "La fecha de fabricación del lote debe ser una fecha pasada.",
   "stockAddProductsModal.noLotsNoPermission": "Este producto no tiene lotes definidos.",

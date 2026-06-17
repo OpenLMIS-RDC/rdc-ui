@@ -35,7 +35,7 @@
         'orderableGroupService', 'MAX_INTEGER_VALUE', 'VVM_STATUS', 'loadingModalService', 'alertService',
         'dateUtils', 'displayItems', 'ADJUSTMENT_TYPE', 'UNPACK_REASONS', 'REASON_TYPES', 'STOCKCARD_STATUS',
         'hasPermissionToAddNewLot', 'LotResource', '$q', 'editLotModalService', 'moment', 'QUANTITY_UNIT',
-        'quantityUnitCalculateService'
+        'quantityUnitCalculateService', 'tradeItemManufacturerService'
     ];
 
     function controller($scope, $state, $stateParams, $filter, confirmDiscardService, program,
@@ -44,7 +44,7 @@
                         offlineService, orderableGroupService, MAX_INTEGER_VALUE, VVM_STATUS, loadingModalService,
                         alertService, dateUtils, displayItems, ADJUSTMENT_TYPE, UNPACK_REASONS, REASON_TYPES,
                         STOCKCARD_STATUS, hasPermissionToAddNewLot, LotResource, $q, editLotModalService, moment,
-                        QUANTITY_UNIT, quantityUnitCalculateService) {
+                        QUANTITY_UNIT, quantityUnitCalculateService, tradeItemManufacturerService) {
         var vm = this,
             previousAdded = {};
 
@@ -660,6 +660,12 @@
         function onInit() {
             var copiedOrderableGroups = angular.copy(orderableGroups);
             vm.allItems = _.flatten(copiedOrderableGroups);
+
+            // Preload manufacturers for all available products in a single request, so they are
+            // ready from cache as products are added to the table.
+            tradeItemManufacturerService.prefetch(vm.allItems.map(function(item) {
+                return item.orderable;
+            }));
 
             $state.current.label = messageService.get(vm.key('title'), {
                 facilityCode: facility.code,

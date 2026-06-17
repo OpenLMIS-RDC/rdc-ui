@@ -4,10 +4,14 @@
   "openlmisHome.welcome": "Bienvenue au\nSysteme d’Information de Gestion Logistique",
 
   "stockReceiveCreation.manufactureDate": "Date de fabrication",
+  "stockReceiveCreation.manufacturer": "Fabricant",
   "stockIssueCreation.manufactureDate": "Date de fabrication",
+  "stockIssueCreation.manufacturer": "Fabricant",
   "stockPhysicalInventoryDraft.manufactureDate": "Date de fabrication",
+  "stockPhysicalInventoryDraft.manufacturer": "Fabricant",
   "stockAddProductsModal.newLotManufactureDate": "Date de fabrication",
   "stockAdjustmentCreation.manufactureDate": "Date de fabrication",
+  "stockAdjustmentCreation.manufacturer": "Fabricant",
   "stockEditLotModal.manufactureDateInvalid": "La date de fabrication du lot doit être une date passée.",
   "stockAddProductsModal.noLotsNoPermission": "Ce produit n’a aucun lot défini.",
 
