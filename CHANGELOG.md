@@ -1,6 +1,7 @@
-1.1.0-SNAPSHOT (WIP)
+1.0.1 / 2026-06-26
 =================
 * [ODRC-116](https://openlmis.atlassian.net/browse/ODRC-116) Display manufacturer column in stock views
+* [ODRC-89](https://openlmis.atlassian.net/browse/ODRC-89) Do not allow selecting product with no lot
 
 1.0.0 / 2026-06-09
 =================
