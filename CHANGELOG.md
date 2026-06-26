@@ -1,3 +1,6 @@
+1.0.2 (WIP)
+=================
+
 1.0.1 / 2026-06-26
 =================
 * [ODRC-116](https://openlmis.atlassian.net/browse/ODRC-116) Display manufacturer column in stock views
