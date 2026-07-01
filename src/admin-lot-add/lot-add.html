@@ -1,0 +1,41 @@
+<div class="modal" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1>{{'adminLotAdd.addLot.title' | message}}</h1>
+            </div>
+            <div class="modal-body">
+                <form id="lot-add-form" ng-submit="vm.addLot()">
+                    <label for="product">{{'adminLotAdd.product' | message}}</label>
+                    <select id="product"
+                            ng-model="vm.selectedOrderable"
+                            ng-options="orderable as orderable.fullProductName for orderable in vm.orderables"
+                            required>
+                    </select>
+                    <label for="lotCode">{{'adminLotAdd.lotCode' | message}}</label>
+                    <input id="lotCode" type="text" ng-model="vm.lot.lotCode" required/>
+                    <label for="lotExpiryDate">{{'adminLotAdd.lotExpiryDate' | message}}</label>
+                    <input
+                            openlmis-datepicker
+                            type="text"
+                            id="lotExpiryDate"
+                            ng-model="vm.lot.expirationDate"/>
+                    <label for="lotManufactureDate">{{'adminLotAdd.lotManufactureDate' | message}}</label>
+                    <input
+                            openlmis-datepicker
+                            type="text"
+                            id="lotManufactureDate"
+                            ng-model="vm.lot.manufactureDate"/>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="cancel" ng-click="vm.goToPreviousState()">
+                    {{'adminLotAdd.cancel' | message}}
+                </button>
+                <button class="primary" form="lot-add-form">
+                    {{'adminLotAdd.addLot' | message}}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

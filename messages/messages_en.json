@@ -21,6 +21,17 @@
   "requisitionView.createdDate": "Created at",
   "requisitionView.latestStatusChange": "Latest status change",
 
+  "adminLotList.addLot": "Add Lot",
+  "adminLotAdd.addLot": "Add Lot",
+  "adminLotAdd.addLot.title": "Add Lot",
+  "adminLotAdd.product": "Product",
+  "adminLotAdd.lotCode": "Lot Code",
+  "adminLotAdd.lotExpiryDate": "Expiry Date",
+  "adminLotAdd.lotManufactureDate": "Manufacture Date",
+  "adminLotAdd.cancel": "Cancel",
+  "adminLotAdd.save.success": "Lot created successfully",
+  "adminLotAdd.save.failure": "Failed to create lot",
+
   "stockConstants.stage1": "Stage 1",
   "stockConstants.stage2": "Stage 2",
   "stockConstants.stage3": "Stage 3",
