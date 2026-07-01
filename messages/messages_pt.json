@@ -18,6 +18,17 @@
   "requisitionView.createdDate": "Criado em",
   "requisitionView.latestStatusChange": "Última alteração de estado",
 
+  "adminLotList.addLot": "Adicionar lote",
+  "adminLotAdd.addLot": "Adicionar lote",
+  "adminLotAdd.addLot.title": "Adicionar lote",
+  "adminLotAdd.product": "Produto",
+  "adminLotAdd.lotCode": "Código do lote",
+  "adminLotAdd.lotExpiryDate": "Data de validade",
+  "adminLotAdd.lotManufactureDate": "Data de Fabrico",
+  "adminLotAdd.cancel": "Cancelar",
+  "adminLotAdd.save.success": "Lote criado com sucesso",
+  "adminLotAdd.save.failure": "Falha ao criar o lote",
+
   "stockConstants.stage1": "Fase 1",
   "stockConstants.stage2": "Fase 2",
   "stockConstants.stage3": "Fase 3",
