@@ -9,6 +9,7 @@
   "stockPhysicalInventoryDraft.manufactureDate": "Manufacture Date",
   "stockPhysicalInventoryDraft.manufacturer": "Manufacturer",
   "stockAddProductsModal.newLotManufactureDate": "Manufacture Date",
+  "stockAddProductsModal.manufactureDate": "Manufacture Date",
   "stockAdjustmentCreation.manufactureDate": "Manufacture Date",
   "stockAdjustmentCreation.manufacturer": "Manufacturer",
   "stockEditLotModal.manufactureDateInvalid": "Lot manufacture date should be a past date.",
@@ -23,8 +24,8 @@
 
   "adminLotList.addLot": "Add Lot",
   "adminLotAdd.addLot": "Add Lot",
-  "adminLotAdd.addLot.title": "Add Lot",
   "adminLotAdd.product": "Product",
+  "adminLotAdd.noProducts": "No products available.",
   "adminLotAdd.lotCode": "Lot Code",
   "adminLotAdd.lotExpiryDate": "Expiry Date",
   "adminLotAdd.lotManufactureDate": "Manufacture Date",

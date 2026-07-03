@@ -17,7 +17,7 @@
             <label for="product">{{'adminLotList.product' | message}}</label>
             <select id="product"
                     ng-model="vm.orderableId"
-                    ng-options="o.id as o.fullProductName for o in vm.orderables">
+                    ng-options="o.id as (o.fullProductName + ' (' + o.productCode + ')') for o in vm.orderables | orderBy:'productCode'">
             </select>
         </fieldset>
         <input type="submit" value="{{'adminLotList.search' | message}}"/>

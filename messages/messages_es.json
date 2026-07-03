@@ -20,8 +20,8 @@
 
   "adminLotList.addLot": "Añadir lote",
   "adminLotAdd.addLot": "Añadir lote",
-  "adminLotAdd.addLot.title": "Añadir lote",
   "adminLotAdd.product": "Producto",
+  "adminLotAdd.noProducts": "No hay productos disponibles.",
   "adminLotAdd.lotCode": "Código de lote",
   "adminLotAdd.lotExpiryDate": "Fecha de caducidad",
   "adminLotAdd.lotManufactureDate": "Fecha de fabricación",

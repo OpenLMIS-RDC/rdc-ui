@@ -2,16 +2,18 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h1>{{'adminLotAdd.addLot.title' | message}}</h1>
+                <h1>{{'adminLotAdd.addLot' | message}}</h1>
             </div>
             <div class="modal-body">
                 <form id="lot-add-form" ng-submit="vm.addLot()">
                     <label for="product">{{'adminLotAdd.product' | message}}</label>
                     <select id="product"
+                            ng-if="vm.orderables.length > 0"
                             ng-model="vm.selectedOrderable"
-                            ng-options="orderable as orderable.fullProductName for orderable in vm.orderables"
+                            ng-options="orderable as (orderable.fullProductName + ' (' + orderable.productCode + ')') for orderable in vm.orderables | orderBy:'productCode'"
                             required>
                     </select>
+                    <p ng-if="vm.orderables.length === 0">{{'adminLotAdd.noProducts' | message}}</p>
                     <label for="lotCode">{{'adminLotAdd.lotCode' | message}}</label>
                     <input id="lotCode" type="text" ng-model="vm.lot.lotCode" required/>
                     <label for="lotExpiryDate">{{'adminLotAdd.lotExpiryDate' | message}}</label>
