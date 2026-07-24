@@ -50,7 +50,7 @@ services:
       - '/openlmis-referencedata-ui'
 
   report-ui:
-    image: openlmis/report-ui:5.2.15
+    image: openlmis/report-ui:5.2.16-SNAPSHOT
     volumes:
       - '/openlmis-report-ui'
 

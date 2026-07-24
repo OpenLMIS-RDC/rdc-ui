@@ -1,6 +1,7 @@
 1.0.2 (WIP)
 =================
 * [ODRC-124](https://openlmis.atlassian.net/browse/ODRC-124) Temporary lot management - add lot button in lot list view
+* [ODRC-132](https://openlmis.atlassian.net/browse/ODRC-132) Support embedded Superset dashboards
 
 1.0.1 / 2026-06-26
 =================
