@@ -13,6 +13,11 @@
   "stockEditLotModal.manufactureDateInvalid": "A data de Fabrico do lote deve ser uma data no passado.",
   "stockAddProductsModal.noLotsNoPermission": "Este produto não tem lotes definidos.",
 
+  "shipmentView.orderQuantity": "Quantidade do pedido (em pacotes)",
+  "shipmentView.orderQuantityInDoses": "Quantidade do pedido (em doses)",
+
+  "proofOfDeliveryView.quantityShipped": "Quantidade enviada (em pacotes)",
+  "proofOfDeliveryView.quantityShippedInDoses": "Quantidade enviada (em doses)",
   "proofOfDeliveryView.quantityRejected": "Quantidade rejeitada",
 
   "requisitionView.createdDate": "Criado em",

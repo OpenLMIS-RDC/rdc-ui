@@ -17,5 +17,9 @@
   "stockConstants.stage1": "المرحلة 1",
   "stockConstants.stage2": "المرحلة 2",
   "stockConstants.stage3": "المرحلة 3",
-  "stockConstants.stage4": "المرحلة 4"
+  "stockConstants.stage4": "المرحلة 4",
+  "shipmentView.orderQuantity": "Order Quantity (in Packs)",
+  "shipmentView.orderQuantityInDoses": "Order Quantity (in Doses)",
+  "proofOfDeliveryView.quantityShipped": "Quantity Shipped (in Packs)",
+  "proofOfDeliveryView.quantityShippedInDoses": "Quantity Shipped (in Doses)"
 }

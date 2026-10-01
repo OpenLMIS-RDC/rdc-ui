@@ -2,6 +2,7 @@
 =================
 * [ODRC-124](https://openlmis.atlassian.net/browse/ODRC-124) Temporary lot management - add lot button in lot list view
 * [ODRC-132](https://openlmis.atlassian.net/browse/ODRC-132) Support embedded Superset dashboards
+* [ODRC-158](https://openlmis.atlassian.net/browse/ODRC-158) Show order and shipped quantities in packs and in doses on the shipment and Proof of Delivery views
 
 1.0.1 / 2026-06-26
 =================
