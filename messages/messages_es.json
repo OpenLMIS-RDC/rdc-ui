@@ -16,6 +16,7 @@
   "proofOfDeliveryView.quantityRejected": "Cantidad rechazada",
   "proofOfDeliveryView.shippedDate": "Fecha de envío",
   "proofOfDeliveryView.receivedDateBeforeShippedDate": "La fecha de recepción no puede ser anterior a la fecha de envío (${shippedDate})",
+  "proofOfDeliveryView.receivedDateInFuture": "La fecha de recepción no puede ser posterior a la fecha actual",
 
   "requisitionView.createdDate": "Creado en",
   "requisitionView.latestStatusChange": "Último cambio de estado",

@@ -50,6 +50,7 @@
         vm.printProofOfDelivery = printProofOfDelivery;
         // ODRC-155 Received date must not precede the shipment - STARTS HERE
         vm.getReceivedDateError = getReceivedDateError;
+        vm.formatDate = formatDate;
         // ODRC-155 Received date must not precede the shipment - ENDS HERE
 
         /**
@@ -128,7 +129,7 @@
          *
          * @description
          * The day the shipment left the supplying facility, as an ISO date (YYYY-MM-DD) in the
-         * timezone configured for the implementation. Undefined if the shipment carries no date.
+         * user's local timezone. Undefined if the shipment carries no date.
          */
         vm.shippedDate = undefined;
 
@@ -142,6 +143,29 @@
          * Lower boundary passed to the datepicker - the shipped date.
          */
         vm.minReceivedDate = undefined;
+
+        /**
+         * @ngdoc property
+         * @propertyOf proof-of-delivery-view.controller:ProofOfDeliveryViewController
+         * @name today
+         * @type {String}
+         *
+         * @description
+         * The current day as an ISO date (YYYY-MM-DD) in the user's local timezone, as in the
+         * other views. The received date cannot be later than this.
+         */
+        vm.today = undefined;
+
+        /**
+         * @ngdoc property
+         * @propertyOf proof-of-delivery-view.controller:ProofOfDeliveryViewController
+         * @name maxReceivedDate
+         * @type {Date}
+         *
+         * @description
+         * Upper boundary passed to the datepicker - today.
+         */
+        vm.maxReceivedDate = undefined;
 
         // ODRC-155 Received date must not precede the shipment - ENDS HERE
 
@@ -165,6 +189,8 @@
             // ODRC-155 Received date must not precede the shipment - STARTS HERE
             vm.shippedDate = toLocalDate(getShippedDate());
             vm.minReceivedDate = toDatepickerBoundary(vm.shippedDate);
+            vm.today = toLocalDate(new Date());
+            vm.maxReceivedDate = toDatepickerBoundary(vm.today);
             // ODRC-155 Received date must not precede the shipment - ENDS HERE
         }
 
@@ -233,13 +259,7 @@
          * @name getReceivedDateError
          *
          * @description
-         * Returns a translated error message if the received date entered by the user is earlier
-         * than the date the shipment left the supplying facility. Returning a non-empty message
-         * through the openlmis-invalid attribute marks the field - and therefore the whole form -
-         * as invalid, which stops the Proof of Delivery from being confirmed.
-         *
-         * An empty received date is left to the 'required' validation, and a Proof of Delivery
-         * whose shipment carries no shipped date is not restricted at all.
+         * Returns a translated error message if validation fails.
          *
          * @return {String} the error message, or undefined if the received date is acceptable
          */
@@ -250,14 +270,40 @@
                 return undefined;
             }
 
-            // Both sides are ISO dates resolved in the same timezone, so they compare as strings.
+            // All sides are ISO dates in the user's local timezone, so they compare as strings.
             if (vm.shippedDate && receivedDate < vm.shippedDate) {
                 return messageService.get('proofOfDeliveryView.receivedDateBeforeShippedDate', {
-                    shippedDate: $filter('openlmisDate')(getShippedDate())
+                    shippedDate: formatDate(vm.shippedDate)
                 });
             }
 
+            if (receivedDate > vm.today) {
+                return messageService.get('proofOfDeliveryView.receivedDateInFuture');
+            }
+
             return undefined;
+        }
+
+        /**
+         * @ngdoc method
+         * @methodOf proof-of-delivery-view.controller:ProofOfDeliveryViewController
+         * @name formatDate
+         *
+         * @description
+         * Formats an ISO date (YYYY-MM-DD) with the configured date format, keeping the calendar
+         * day as it is.
+         *
+         * @param  {String} date the ISO date
+         * @return {String}      the formatted date
+         */
+        function formatDate(date) {
+            if (!date) {
+                return undefined;
+            }
+            return $filter('date')(
+                moment(date, 'YYYY-MM-DD').toDate(),
+                localeService.getFromStorage().dateFormat
+            );
         }
 
         function getShippedDate() {
@@ -265,22 +311,21 @@
         }
 
         /**
-         * Resolves an instant into the calendar day it falls on in the timezone configured for the
-         * implementation - the same timezone the openlmisDate filter renders with, so what the user
-         * compares on screen is what the validation compares.
+         * Resolves an instant into the calendar day it falls on in the user's local timezone.
          */
         function toLocalDate(date) {
             if (!date) {
                 return undefined;
             }
-            return moment.tz(date, getTimeZoneId())
-                .format('YYYY-MM-DD');
+            return moment(date).format('YYYY-MM-DD');
         }
 
         /**
-         * Turns an ISO date into the boundary object the datepicker expects. The datepicker
-         * re-projects whatever it is given through the configured timezone, so the boundary is
-         * anchored at midday to guarantee it lands back on the very same calendar day.
+         * Turns an ISO date into the boundary the datepicker expects. The boundary must be an
+         * instant (a Date), never the ISO string itself: the datepicker parses a date-only string
+         * as UTC midnight and re-projects it through the configured timezone, which moves it to the
+         * previous day west of UTC. The instant is therefore placed at midday of that day in the
+         * configured timezone, so the datepicker lands back on the very same calendar day.
          */
         function toDatepickerBoundary(localDate) {
             if (!localDate) {

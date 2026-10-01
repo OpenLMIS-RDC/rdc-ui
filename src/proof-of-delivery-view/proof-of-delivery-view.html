@@ -35,9 +35,9 @@
             {{vm.order.supplyingFacility.name}}
         </li>
         <!-- ODRC-155 Received date must not precede the shipment - STARTS HERE -->
-        <li ng-if="vm.proofOfDelivery.shipment.shippedDate">
+        <li ng-if="vm.shippedDate">
             <strong>{{'proofOfDeliveryView.shippedDate' | message}}</strong>
-            {{vm.proofOfDelivery.shipment.shippedDate | openlmisDate}}
+            {{vm.formatDate(vm.shippedDate)}}
         </li>
         <!-- ODRC-155 Received date must not precede the shipment - ENDS HERE -->
     </ul>
@@ -160,12 +160,15 @@
                     <input id="receivedDate" type="date"
                         ng-model="vm.proofOfDelivery.receivedDate"
                         min-date="vm.minReceivedDate"
+                        max-date="vm.maxReceivedDate"
                         openlmis-invalid="{{vm.getReceivedDateError()}}"
                         required/>
                     <!-- ODRC-155 Received date must not precede the shipment - ENDS HERE -->
                 </div>
                 <div ng-if="!vm.canEdit">
-                    {{vm.proofOfDelivery.receivedDate | openlmisDate}}
+                    <!-- ODRC-155 Received date must not precede the shipment - STARTS HERE -->
+                    {{vm.formatDate(vm.proofOfDelivery.receivedDate)}}
+                    <!-- ODRC-155 Received date must not precede the shipment - ENDS HERE -->
                 </div>
             </dd>
         </dl>

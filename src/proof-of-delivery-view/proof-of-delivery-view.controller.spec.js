@@ -19,7 +19,7 @@ describe('PodViewController', function() {
         ReasonDataBuilder, VVM_STATUS, messageService, orderLineItems, ProofOfDeliveryPrinter;
 
     // ODRC-155 Received date must not precede the shipment - STARTS HERE
-    var localeService, moment, TIME_ZONE_ID = 'Etc/Test-Plus1';
+    var localeService, moment, $filter, TIME_ZONE_ID = 'Etc/Test-Plus1';
     // ODRC-155 Received date must not precede the shipment - ENDS HERE
 
     beforeEach(function() {
@@ -43,15 +43,21 @@ describe('PodViewController', function() {
             // ODRC-155 Received date must not precede the shipment - STARTS HERE
             localeService = $injector.get('localeService');
             moment = $injector.get('moment');
+            $filter = $injector.get('$filter');
             // ODRC-155 Received date must not precede the shipment - ENDS HERE
         });
 
         // ODRC-155 Received date must not precede the shipment - STARTS HERE
+        // karma loads moment-timezone without zone data, so the test zones are defined here
         moment.tz.add('Etc/Test-Plus1|TP1|-10|0|');
+        moment.tz.add('Etc/Test-Minus5|TM5|50|0|');
 
-        spyOn(localeService, 'getFromStorage').andReturn({
-            timeZoneId: TIME_ZONE_ID,
-            dateFormat: 'dd/MM/yyyy'
+        TIME_ZONE_ID = 'Etc/Test-Plus1';
+        spyOn(localeService, 'getFromStorage').andCallFake(function() {
+            return {
+                timeZoneId: TIME_ZONE_ID,
+                dateFormat: 'dd/MM/yyyy'
+            };
         });
         // ODRC-155 Received date must not precede the shipment - ENDS HERE
 
@@ -233,8 +239,7 @@ describe('PodViewController', function() {
     describe('received date boundaries', function() {
 
         beforeEach(function() {
-            // 16 Jan 2018, 18:34 UTC is still 16 Jan in Africa/Kinshasa (UTC+1)
-            proofOfDelivery.shipment.shippedDate = '2018-01-16T18:34:57.915Z';
+            proofOfDelivery.shipment.shippedDate = '2018-01-16T12:00:00.000Z';
             vm.$onInit();
         });
 
@@ -242,9 +247,13 @@ describe('PodViewController', function() {
             expect(vm.shippedDate).toEqual('2018-01-16');
         });
 
-        it('should resolve the shipped date in the configured timezone, not in UTC', function() {
-            // 23:30 UTC has already rolled over to the next day in Africa/Kinshasa (UTC+1)
-            proofOfDelivery.shipment.shippedDate = '2018-01-16T23:30:00.000Z';
+        it('should resolve the shipped date in the user\'s local timezone', function() {
+            proofOfDelivery.shipment.shippedDate = new Date(2018, 0, 16, 23, 30).toISOString();
+            vm.$onInit();
+
+            expect(vm.shippedDate).toEqual('2018-01-16');
+
+            proofOfDelivery.shipment.shippedDate = new Date(2018, 0, 17, 0, 30).toISOString();
             vm.$onInit();
 
             expect(vm.shippedDate).toEqual('2018-01-17');
@@ -258,9 +267,53 @@ describe('PodViewController', function() {
             expect(vm.minReceivedDate).toBeUndefined();
         });
 
-        it('should anchor the datepicker boundary on the same day it represents', function() {
-            expect(moment.tz(vm.minReceivedDate, TIME_ZONE_ID)
-                .format('YYYY-MM-DD')).toEqual(vm.shippedDate);
+        it('should leave the shipped date undefined if there is no shipment', function() {
+            proofOfDelivery.shipment = undefined;
+            vm.$onInit();
+
+            expect(vm.shippedDate).toBeUndefined();
+            expect(vm.minReceivedDate).toBeUndefined();
+        });
+
+        it('should expose today as a local date', function() {
+            expect(vm.today).toEqual($filter('date')(new Date(), 'yyyy-MM-dd'));
+        });
+
+        it('should pass the datepicker boundaries as instants on the days they represent', function() {
+            expect(vm.minReceivedDate instanceof Date).toBe(true);
+            expect(vm.maxReceivedDate instanceof Date).toBe(true);
+            expect($filter('openlmisDate')(vm.minReceivedDate)).toEqual('16/01/2018');
+            expect($filter('openlmisDate')(vm.maxReceivedDate)).toEqual($filter('date')(new Date(), 'dd/MM/yyyy'));
+        });
+
+        it('should keep the datepicker boundaries on the right days west of UTC', function() {
+            // a date-only boundary would be read as UTC midnight and shown as the previous day here
+            TIME_ZONE_ID = 'Etc/Test-Minus5';
+            vm.$onInit();
+
+            expect(vm.minReceivedDate instanceof Date).toBe(true);
+            expect(vm.maxReceivedDate instanceof Date).toBe(true);
+            expect($filter('openlmisDate')(vm.minReceivedDate)).toEqual('16/01/2018');
+            expect($filter('openlmisDate')(vm.maxReceivedDate)).toEqual($filter('date')(new Date(), 'dd/MM/yyyy'));
+        });
+
+    });
+
+    describe('formatDate', function() {
+
+        it('should format an ISO date with the configured date format', function() {
+            expect(vm.formatDate('2018-01-16')).toEqual('16/01/2018');
+        });
+
+        it('should keep the calendar day west of UTC', function() {
+            // openlmisDate would read the ISO date as UTC midnight and show 15/01/2018 here
+            TIME_ZONE_ID = 'Etc/Test-Minus5';
+
+            expect(vm.formatDate('2018-01-16')).toEqual('16/01/2018');
+        });
+
+        it('should return undefined for an empty date', function() {
+            expect(vm.formatDate(undefined)).toBeUndefined();
         });
 
     });
@@ -268,7 +321,7 @@ describe('PodViewController', function() {
     describe('getReceivedDateError', function() {
 
         beforeEach(function() {
-            proofOfDelivery.shipment.shippedDate = '2018-01-16T18:34:57.915Z';
+            proofOfDelivery.shipment.shippedDate = '2018-01-16T12:00:00.000Z';
             vm.$onInit();
 
             messageService.get.andReturn('translated message');
@@ -304,10 +357,18 @@ describe('PodViewController', function() {
             );
         });
 
-        it('should return no error if the received date is in the future', function() {
-            proofOfDelivery.receivedDate = '2999-01-01';
+        it('should return no error if the received date is today', function() {
+            proofOfDelivery.receivedDate = vm.today;
 
             expect(vm.getReceivedDateError()).toBeUndefined();
+        });
+
+        it('should return an error if the received date is in the future', function() {
+            proofOfDelivery.receivedDate = moment().add(1, 'days')
+                .format('YYYY-MM-DD');
+
+            expect(vm.getReceivedDateError()).toEqual('translated message');
+            expect(messageService.get).toHaveBeenCalledWith('proofOfDeliveryView.receivedDateInFuture');
         });
 
         it('should not check against the shipped date if the shipment has none', function() {
@@ -317,6 +378,24 @@ describe('PodViewController', function() {
             proofOfDelivery.receivedDate = '2010-01-01';
 
             expect(vm.getReceivedDateError()).toBeUndefined();
+        });
+
+        it('should not check against the shipped date if there is no shipment', function() {
+            proofOfDelivery.shipment = undefined;
+            vm.$onInit();
+
+            proofOfDelivery.receivedDate = '2010-01-01';
+
+            expect(vm.getReceivedDateError()).toBeUndefined();
+        });
+
+        it('should still reject a future date if the shipment has no shipped date', function() {
+            proofOfDelivery.shipment.shippedDate = undefined;
+            vm.$onInit();
+
+            proofOfDelivery.receivedDate = '2999-01-01';
+
+            expect(vm.getReceivedDateError()).toEqual('translated message');
         });
 
     });
