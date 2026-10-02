@@ -13,6 +13,11 @@
   "stockEditLotModal.manufactureDateInvalid": "A data de Fabrico do lote deve ser uma data no passado.",
   "stockAddProductsModal.noLotsNoPermission": "Este produto não tem lotes definidos.",
 
+  "shipmentView.orderQuantity": "Quantidade do pedido (em pacotes)",
+  "shipmentView.orderQuantityInDoses": "Quantidade do pedido (em doses)",
+
+  "proofOfDeliveryView.quantityShipped": "Quantidade enviada (em pacotes)",
+  "proofOfDeliveryView.quantityShippedInDoses": "Quantidade enviada (em doses)",
   "proofOfDeliveryView.quantityRejected": "Quantidade rejeitada",
   "proofOfDeliveryView.shippedDate": "Data de envio",
   "proofOfDeliveryView.receivedDateBeforeShippedDate": "A data de recepção não pode ser anterior à data de envio (${shippedDate})",

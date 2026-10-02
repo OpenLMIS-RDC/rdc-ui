@@ -15,12 +15,16 @@
   "stockEditLotModal.manufactureDateInvalid": "La date de fabrication du lot doit être une date passée.",
   "stockAddProductsModal.noLotsNoPermission": "Ce produit n’a aucun lot défini.",
 
+  "proofOfDeliveryView.quantityShipped": "Quantité livrée (conditionnement)",
+  "proofOfDeliveryView.quantityShippedInDoses": "Quantité livrée (doses)",
   "proofOfDeliveryView.quantityRejected": "Quantité rejetée",
   "proofOfDeliveryView.shippedDate": "Date d'expédition",
   "proofOfDeliveryView.receivedDateBeforeShippedDate": "La date de réception ne peut pas être antérieure à la date d'expédition (${shippedDate})",
   "proofOfDeliveryView.receivedDateInFuture": "La date de réception ne peut pas être dans le futur",
 
   "shipmentView.fillQuantityInPack": "Quantité à  expédier (conditionnement)",
+  "shipmentView.orderQuantity": "Quantité commandée (conditionnement)",
+  "shipmentView.orderQuantityInDoses": "Quantité commandée (doses)",
 
   "requisitionView.geographicZoneLevel": "Niveau d’organisation",
   "requisitionView.geographicZone": "Unité d’organisation",

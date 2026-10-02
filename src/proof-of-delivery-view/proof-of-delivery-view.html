@@ -51,7 +51,9 @@
                     <th>{{'proofOfDeliveryView.productName' | message}}</th>
                     <th>{{'proofOfDeliveryView.productUnit' | message}}</th>
                     <th>{{'proofOfDeliveryView.quantityOrdered' | message}}</th>
+                    <!-- RDC customization: shipped quantity in packs and in doses -->
                     <th>{{'proofOfDeliveryView.quantityShipped' | message}}</th>
+                    <th>{{'proofOfDeliveryView.quantityShippedInDoses' | message}}</th>
                     <th>{{'proofOfDeliveryView.lotCode' | message}}</th>
                     <th>{{'proofOfDeliveryView.quantityAccepted' | message}}</th>
                     <th ng-if="vm.showVvmColumn">{{'proofOfDeliveryView.vvmStatus' | message}}</th>
@@ -68,6 +70,8 @@
                     <td>{{orderLineItem.orderable.dispensable.displayUnit}}</td>
                     <td>{{orderLineItem.orderedQuantity}}</td>
                     <td></td>
+                    <!-- RDC customization: shipped quantity in doses -->
+                    <td></td>
                     <td></td>
                     <td ng-if="vm.showVvmColumn"></td>
                     <td></td>
@@ -79,6 +83,8 @@
                     <td>{{groupOfFulfillingLineItems[0].orderable.fullProductName}}</td>
                     <td>{{groupOfFulfillingLineItems[0].orderable.dispensable.displayUnit}}</td>
                     <td></td>
+                    <td></td>
+                    <!-- RDC customization: shipped quantity in doses -->
                     <td></td>
                     <td></td>
                     <td ng-if="vm.showVvmColumn"></td>
@@ -92,6 +98,8 @@
                     <td></td>
                     <td></td>
                     <td>{{fulfillingLineItem.quantityShipped}}</td>
+                    <!-- RDC customization: shipped quantity in doses -->
+                    <td>{{fulfillingLineItem.quantityShipped * fulfillingLineItem.orderable.netContent}}</td>
                     <td>{{fulfillingLineItem.lot | lotCode}}</td>
                     <td ng-if="vm.canEdit">
                         <input positive-integer
