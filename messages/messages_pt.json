@@ -10,7 +10,10 @@
   "stockPhysicalInventoryDraft.manufacturer": "Fabricante",
   "stockAdjustmentCreation.manufacturer": "Fabricante",
   "stockAddProductsModal.newLotManufactureDate": "Data de Fabrico",
+  "stockAddProductsModal.manufactureDate": "Data de Fabrico",
+  "stockEditLotModal.manufactureDate": "Data de Fabrico",
   "stockEditLotModal.manufactureDateInvalid": "A data de Fabrico do lote deve ser uma data no passado.",
+  "stockEditLotModal.manufactureDateInvalidForLotCode": "Existe outra data de Fabrico para este código.",
   "stockAddProductsModal.noLotsNoPermission": "Este produto não tem lotes definidos.",
 
   "proofOfDeliveryView.quantityRejected": "Quantidade rejeitada",

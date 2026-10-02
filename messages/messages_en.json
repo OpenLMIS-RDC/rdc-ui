@@ -12,7 +12,9 @@
   "stockAddProductsModal.manufactureDate": "Manufacture Date",
   "stockAdjustmentCreation.manufactureDate": "Manufacture Date",
   "stockAdjustmentCreation.manufacturer": "Manufacturer",
+  "stockEditLotModal.manufactureDate": "Manufacture date",
   "stockEditLotModal.manufactureDateInvalid": "Lot manufacture date should be a past date.",
+  "stockEditLotModal.manufactureDateInvalidForLotCode": "There exists another manufacture date for this code.",
   "stockAddProductsModal.noLotsNoPermission": "This product has no lots defined.",
 
   "proofOfDeliveryView.quantityRejected": "Quantity Rejected",
