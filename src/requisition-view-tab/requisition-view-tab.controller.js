@@ -297,14 +297,7 @@
         function getLabelForColumn(column) {
             var key = 'requisition.columnLabel.' + column.name;
             var translated = messageService.get(key);
-            var translatedLabel = translated === key ? column.label : translated;
-            if (column.isQuantity) {
-                var columnLabelSuffix = requisition.showInDoses()
-                    ? messageService.get('requisitionViewTab.DosesSuffix')
-                    : messageService.get('requisitionViewTab.PacksSuffix');
-                translatedLabel = translatedLabel + ' ' + columnLabelSuffix;
-            }
-            return translatedLabel;
+            return translated === key ? column.label : translated;
         }
 
         /**

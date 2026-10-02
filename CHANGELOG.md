@@ -1,6 +1,7 @@
 1.0.2 (WIP)
 =================
 * [ODRC-124](https://openlmis.atlassian.net/browse/ODRC-124) Temporary lot management - add lot button in lot list view
+* [ODRC-157](https://openlmis.atlassian.net/browse/ODRC-157) Remove the packs/doses suffix from requisition column headers, as in core; add the missing manufacture date translations in the lot modals
 * [ODRC-132](https://openlmis.atlassian.net/browse/ODRC-132) Support embedded Superset dashboards
 
 1.0.1 / 2026-06-26
