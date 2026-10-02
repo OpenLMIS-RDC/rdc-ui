@@ -2,7 +2,7 @@
 =================
 * [ODRC-155](https://openlmis.atlassian.net/browse/ODRC-155) Restrict POD received date to the range between the shipment date and today
 * [ODRC-124](https://openlmis.atlassian.net/browse/ODRC-124) Temporary lot management - add lot button in lot list view
-* [ODRC-157](https://openlmis.atlassian.net/browse/ODRC-157) Remove the packs/doses suffix from requisition column headers, as in core; add the missing manufacture date translations in the lot modals
+* [ODRC-157](https://openlmis.atlassian.net/browse/ODRC-157) Remove the packs/doses suffix from requisition column headers, as in core; add the missing manufacture date translations in the lot modals; sync the requisition view tab override with core (supplying-facility stock on hand)
 * [ODRC-132](https://openlmis.atlassian.net/browse/ODRC-132) Support embedded Superset dashboards
 
 1.0.1 / 2026-06-26
