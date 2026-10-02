@@ -16,6 +16,9 @@
   "stockAddProductsModal.noLotsNoPermission": "This product has no lots defined.",
 
   "proofOfDeliveryView.quantityRejected": "Quantity Rejected",
+  "proofOfDeliveryView.shippedDate": "Shipped Date",
+  "proofOfDeliveryView.receivedDateBeforeShippedDate": "Received date cannot be earlier than the shipped date (${shippedDate})",
+  "proofOfDeliveryView.receivedDateInFuture": "Received date cannot be in the future",
 
   "requisitionView.geographicZoneLevel": "Geographic level",
   "requisitionView.geographicZone": "Geographic zone",

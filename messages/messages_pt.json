@@ -14,6 +14,9 @@
   "stockAddProductsModal.noLotsNoPermission": "Este produto não tem lotes definidos.",
 
   "proofOfDeliveryView.quantityRejected": "Quantidade rejeitada",
+  "proofOfDeliveryView.shippedDate": "Data de envio",
+  "proofOfDeliveryView.receivedDateBeforeShippedDate": "A data de recepção não pode ser anterior à data de envio (${shippedDate})",
+  "proofOfDeliveryView.receivedDateInFuture": "A data de recepção não pode ser no futuro",
 
   "requisitionView.createdDate": "Criado em",
   "requisitionView.latestStatusChange": "Última alteração de estado",

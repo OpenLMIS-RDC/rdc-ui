@@ -1,5 +1,6 @@
 1.0.2 (WIP)
 =================
+* [ODRC-155](https://openlmis.atlassian.net/browse/ODRC-155) Restrict POD received date to the range between the shipment date and today
 * [ODRC-124](https://openlmis.atlassian.net/browse/ODRC-124) Temporary lot management - add lot button in lot list view
 * [ODRC-132](https://openlmis.atlassian.net/browse/ODRC-132) Support embedded Superset dashboards
 
