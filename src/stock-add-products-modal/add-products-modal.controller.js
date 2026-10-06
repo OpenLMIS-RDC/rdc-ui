@@ -343,7 +343,9 @@
          * Validate if quantity is filled in by user.
          */
         function validate(item) {
-            if (!item.quantity) {
+            // RDC customization ODRC-119: allow adding a product with quantity 0 (0 is falsy, so it was
+            // treated as missing). Only an empty quantity is reported as required.
+            if (item.quantity === undefined || item.quantity === null || item.quantity === '') {
                 item.quantityInvalid = messageService.get('stockAddProductsModal.required');
             } else if (item.quantity > MAX_INTEGER_VALUE) {
                 item.quantityInvalid = messageService.get('stockmanagement.numberTooLarge');
