@@ -4,6 +4,7 @@
 * [ODRC-124](https://openlmis.atlassian.net/browse/ODRC-124) Temporary lot management - add lot button in lot list view
 * [ODRC-157](https://openlmis.atlassian.net/browse/ODRC-157) Remove the packs/doses suffix from requisition column headers, as in core; add the missing manufacture date translations in the lot modals
 * [ODRC-132](https://openlmis.atlassian.net/browse/ODRC-132) Support embedded Superset dashboards
+* [ODRC-119](https://openlmis.atlassian.net/browse/ODRC-119) Allow adding a product with quantity 0 in the physical inventory Add Products modal
 
 1.0.1 / 2026-06-26
 =================
