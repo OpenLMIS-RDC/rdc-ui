@@ -99,7 +99,7 @@
                     <td></td>
                     <td>{{fulfillingLineItem.quantityShipped}}</td>
                     <!-- RDC customization: shipped quantity in doses -->
-                    <td>{{fulfillingLineItem.quantityShipped * fulfillingLineItem.orderable.netContent}}</td>
+                    <td>{{vm.getQuantityShipped(fulfillingLineItem, true)}}</td>
                     <td>{{fulfillingLineItem.lot | lotCode}}</td>
                     <td ng-if="vm.canEdit">
                         <input positive-integer

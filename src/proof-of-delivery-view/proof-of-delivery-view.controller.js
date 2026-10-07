@@ -48,6 +48,8 @@
         vm.getStatusDisplayName = getStatusDisplayName;
         vm.getReasonName = getReasonName;
         vm.printProofOfDelivery = printProofOfDelivery;
+        // RDC customization: shipped quantity in doses
+        vm.getQuantityShipped = getQuantityShipped;
         // ODRC-155 Received date must not precede the shipment - STARTS HERE
         vm.getReceivedDateError = getReceivedDateError;
         vm.formatDate = formatDate;
@@ -249,6 +251,37 @@
                 .catch(function() {
                     printer.closeTab();
                 });
+        }
+
+        // RDC customization: shipped quantity in doses
+        /**
+         * @ngdoc method
+         * @methodOf proof-of-delivery-view.controller:ProofOfDeliveryViewController
+         * @name getQuantityShipped
+         *
+         * @description
+         * Returns the shipped quantity of a fulfilling line item in packs, or in doses (packs times the
+         * net content of the orderable). Returns undefined when the quantity, or the net content for
+         * doses, is missing, so the cell stays empty.
+         *
+         * @param  {Object}  lineItem the fulfilling line item
+         * @param  {boolean} inDoses  true for doses, false for packs
+         * @return {number}           the shipped quantity, undefined if it cannot be calculated
+         */
+        function getQuantityShipped(lineItem, inDoses) {
+            var quantityShipped = lineItem.quantityShipped;
+            if (quantityShipped === undefined || quantityShipped === null) {
+                return;
+            }
+            if (!inDoses) {
+                return quantityShipped;
+            }
+
+            var netContent = lineItem.orderable ? lineItem.orderable.netContent : undefined;
+            if (netContent === undefined || netContent === null) {
+                return;
+            }
+            return quantityShipped * netContent;
         }
 
         // ODRC-155 Received date must not precede the shipment - STARTS HERE

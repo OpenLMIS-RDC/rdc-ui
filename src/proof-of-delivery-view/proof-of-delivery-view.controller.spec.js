@@ -234,6 +234,54 @@ describe('PodViewController', function() {
         });
     });
 
+    // RDC customization: shipped quantity in doses
+    describe('getQuantityShipped', function() {
+
+        var lineItem;
+
+        beforeEach(function() {
+            lineItem = {
+                quantityShipped: 8,
+                orderable: {
+                    netContent: 20
+                }
+            };
+        });
+
+        it('should return the shipped quantity in packs', function() {
+            expect(vm.getQuantityShipped(lineItem, false)).toEqual(8);
+        });
+
+        it('should return the shipped quantity in doses', function() {
+            expect(vm.getQuantityShipped(lineItem, true)).toEqual(160);
+        });
+
+        it('should return zero doses for zero packs', function() {
+            lineItem.quantityShipped = 0;
+
+            expect(vm.getQuantityShipped(lineItem, true)).toEqual(0);
+        });
+
+        it('should return undefined if the shipped quantity is missing', function() {
+            lineItem.quantityShipped = null;
+
+            expect(vm.getQuantityShipped(lineItem, false)).toBeUndefined();
+            expect(vm.getQuantityShipped(lineItem, true)).toBeUndefined();
+        });
+
+        it('should return undefined in doses if the net content is missing', function() {
+            lineItem.orderable.netContent = undefined;
+
+            expect(vm.getQuantityShipped(lineItem, true)).toBeUndefined();
+        });
+
+        it('should return undefined in doses if the orderable is missing', function() {
+            lineItem.orderable = undefined;
+
+            expect(vm.getQuantityShipped(lineItem, true)).toBeUndefined();
+        });
+    });
+
     // ODRC-155 Received date must not precede the shipment - STARTS HERE
 
     describe('received date boundaries', function() {
