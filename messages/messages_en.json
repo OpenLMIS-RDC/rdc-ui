@@ -12,7 +12,9 @@
   "stockAddProductsModal.manufactureDate": "Manufacture Date",
   "stockAdjustmentCreation.manufactureDate": "Manufacture Date",
   "stockAdjustmentCreation.manufacturer": "Manufacturer",
+  "stockEditLotModal.manufactureDate": "Manufacture date",
   "stockEditLotModal.manufactureDateInvalid": "Lot manufacture date should be a past date.",
+  "stockEditLotModal.manufactureDateInvalidForLotCode": "There exists another manufacture date for this code.",
   "stockAddProductsModal.noLotsNoPermission": "This product has no lots defined.",
 
   "shipmentView.orderQuantity": "Order Quantity (in Packs)",
@@ -21,6 +23,9 @@
   "proofOfDeliveryView.quantityShipped": "Quantity Shipped (in Packs)",
   "proofOfDeliveryView.quantityShippedInDoses": "Quantity Shipped (in Doses)",
   "proofOfDeliveryView.quantityRejected": "Quantity Rejected",
+  "proofOfDeliveryView.shippedDate": "Shipped Date",
+  "proofOfDeliveryView.receivedDateBeforeShippedDate": "Received date cannot be earlier than the shipped date (${shippedDate})",
+  "proofOfDeliveryView.receivedDateInFuture": "Received date cannot be in the future",
 
   "requisitionView.geographicZoneLevel": "Geographic level",
   "requisitionView.geographicZone": "Geographic zone",

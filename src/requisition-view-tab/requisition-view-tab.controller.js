@@ -43,6 +43,9 @@
                                canUnskipRequisitionItemWhenApproving, program, TB_MONTHLY_PROGRAM, $scope,
                                quantityUnitCalculateService) {
         var vm = this;
+
+        var SUPPLYING_FACILITY_STOCK_ON_HAND = 'supplyingFacilityStockOnHand';
+
         vm.$onInit = onInit;
         vm.deleteLineItem = deleteLineItem;
         vm.addFullSupplyProducts = addFullSupplyProducts;
@@ -55,9 +58,12 @@
         vm.skippedFullSupplyProductCountMessage = skippedFullSupplyProductCountMessage;
         vm.cacheRequisition = cacheRequisition;
         vm.userCanEditColumn = userCanEditColumn;
+        vm.isSupplyingFacilityShortfall = isSupplyingFacilityShortfall;
+        vm.getSupplyingFacilityStockOnHand = getSupplyingFacilityStockOnHand;
         vm.monthlyTBColumns = TEMPLATE_COLUMNS.getTbMonthlyColumns();
         vm.getLabelForColumn = getLabelForColumn;
         vm.isProductNameColumn = isProductNameColumn;
+        vm.isColumnBeforeSupplyingFacility = isColumnBeforeSupplyingFacility;
 
         /**
          * @ngdoc property
@@ -170,8 +176,63 @@
          */
         vm.program = undefined;
 
+        /**
+         * @ngdoc property
+         * @propertyOf requisition-view-tab.controller:ViewTabController
+         * @name supplyingFacilityHeader
+         * @type {String}
+         *
+         * @description
+         * Translated header describing the resolved supplying facility (or facilities), including the
+         * "not configured" and "stock unavailable" states.
+         */
+        vm.supplyingFacilityHeader = undefined;
+
+        /**
+         * @ngdoc property
+         * @propertyOf requisition-view-tab.controller:ViewTabController
+         * @name supplyingFacilityHasStock
+         * @type {Boolean}
+         *
+         * @description
+         * True when at least one line item carries a supplying-facility stock on hand value. Highlighting
+         * is applied only in this state.
+         */
+        vm.supplyingFacilityHasStock = undefined;
+
+        /**
+         * @ngdoc property
+         * @propertyOf requisition-view-tab.controller:ViewTabController
+         * @name showSupplyingFacilitySoh
+         * @type {Boolean}
+         *
+         * @description
+         * True when the supplying-facility stock on hand column and header should be shown: the template
+         * column is enabled, the user can approve the requisition, and access is not denied.
+         */
+        vm.showSupplyingFacilitySoh = undefined;
+
+        /**
+         * @ngdoc property
+         * @propertyOf requisition-view-tab.controller:ViewTabController
+         * @name showSupplyingFacilityBanner
+         * @type {Boolean}
+         *
+         * @description
+         * True when the missing-permission notification should be shown instead of the column, because the
+         * approver may not view stock cards at the supplying facility.
+         */
+        vm.showSupplyingFacilityBanner = undefined;
+
         function onInit() {
-            angular.forEach(columns, function(column) {
+            // The supplying-facility stock on hand value is rendered by a dedicated cell, so exclude
+            // the template column from the generic grid (and from the field-value pass, which would
+            // otherwise overwrite the server value).
+            var displayedColumns = columns.filter(function(column) {
+                return column.name !== SUPPLYING_FACILITY_STOCK_ON_HAND;
+            });
+
+            angular.forEach(displayedColumns, function(column) {
                 if (column.isQuantityColumn()) {
                     column.isQuantity = true;
                     column.recalculateQuantity = requisition.recalculateQuantity.bind(requisition);
@@ -197,7 +258,7 @@
             vm.items = items;
             vm.filteredItems = lineItems;
             vm.requisition = requisition;
-            vm.columns = columns;
+            vm.columns = displayedColumns;
             vm.program = program;
             vm.userCanEdit = canAuthorize || canSubmit || canUnskipRequisitionItemWhenApproving;
             vm.showAddFullSupplyProductsButton = showAddFullSupplyProductsButton();
@@ -207,6 +268,8 @@
             vm.showOrderableFilter = showOrderableFilter();
             vm.noProductsMessage = getNoProductsMessage();
             vm.canApproveAndReject = canApproveAndReject;
+            computeSupplyingFacilityStock();
+            computeSupplyingFacilityColumnPosition(vm.columns);
             vm.paginationId = fullSupply ? 'fullSupplyList' : 'nonFullSupplyList';
             vm.fullSupply = fullSupply;
             registerSkippedItemsWatcher();
@@ -297,14 +360,7 @@
         function getLabelForColumn(column) {
             var key = 'requisition.columnLabel.' + column.name;
             var translated = messageService.get(key);
-            var translatedLabel = translated === key ? column.label : translated;
-            if (column.isQuantity) {
-                var columnLabelSuffix = requisition.showInDoses()
-                    ? messageService.get('requisitionViewTab.DosesSuffix')
-                    : messageService.get('requisitionViewTab.PacksSuffix');
-                translatedLabel = translatedLabel + ' ' + columnLabelSuffix;
-            }
-            return translatedLabel;
+            return translated === key ? column.label : translated;
         }
 
         /**
@@ -525,6 +581,131 @@
                 return vm.canApproveAndReject;
             }
             return vm.userCanEdit;
+        }
+
+        /**
+         * @ngdoc method
+         * @methodOf requisition-view-tab.controller:ViewTabController
+         * @name isSupplyingFacilityShortfall
+         *
+         * @description
+         * Returns true when the approved quantity for the given line item exceeds the stock on hand at
+         * the supplying facility. A missing stock on hand is treated as zero for the comparison, and the
+         * check applies only when at least one line item carries a stock on hand value. The comparison
+         * uses the raw stored values, so it stays correct regardless of the Packs/Doses display toggle.
+         *
+         * @param  {Object}  lineItem the requisition line item to check
+         * @return {Boolean}          true when the approved quantity exceeds the supplying-facility stock
+         */
+        function isSupplyingFacilityShortfall(lineItem) {
+            if (!vm.supplyingFacilityHasStock) {
+                return false;
+            }
+
+            var stockOnHand = isPresent(lineItem.supplyingFacilityStockOnHand) ?
+                lineItem.supplyingFacilityStockOnHand : 0;
+
+            return lineItem.approvedQuantity > stockOnHand;
+        }
+
+        function computeSupplyingFacilityStock() {
+            var accessDenied = requisition.supplyingFacilityAccessDenied === true;
+            var facilities = requisition.supplyingFacilities;
+
+            vm.supplyingFacilityHasStock = !!(facilities && facilities.length) &&
+                lineItems.some(function(lineItem) {
+                    return isPresent(lineItem.supplyingFacilityStockOnHand);
+                });
+
+            vm.supplyingFacilityHeader = buildSupplyingFacilityHeader(facilities, vm.supplyingFacilityHasStock);
+            vm.supplyingFacilityPlaceholder = messageService.get('requisitionViewTab.supplyingFacility.placeholder');
+
+            var canShow = isSupplyingFacilityColumnEnabled() && !!canApproveAndReject;
+            vm.showSupplyingFacilitySoh = canShow && !accessDenied;
+            vm.showSupplyingFacilityBanner = canShow && accessDenied;
+        }
+
+        function isSupplyingFacilityColumnEnabled() {
+            var column = requisition.template.getColumn(SUPPLYING_FACILITY_STOCK_ON_HAND);
+            return !!(column && column.isDisplayed);
+        }
+
+        // The supplying-facility stock on hand is rendered by a dedicated cell (not the generic
+        // product-grid-cell), so to honour the template's column order we remember the displayed
+        // column whose displayOrder is the highest one still below the supplying-facility column's
+        // own, and render the dedicated cell right after it. A null value means it comes first.
+        function computeSupplyingFacilityColumnPosition(orderedColumns) {
+            vm.supplyingFacilityAfterColumn = null;
+
+            var supplyingFacilityColumn;
+            columns.forEach(function(column) {
+                if (column.name === SUPPLYING_FACILITY_STOCK_ON_HAND) {
+                    supplyingFacilityColumn = column;
+                }
+            });
+            if (!supplyingFacilityColumn) {
+                return;
+            }
+
+            var precedingColumn;
+            orderedColumns.forEach(function(column) {
+                if (column.displayOrder < supplyingFacilityColumn.displayOrder &&
+                    (!precedingColumn || column.displayOrder > precedingColumn.displayOrder)) {
+                    precedingColumn = column;
+                }
+            });
+            vm.supplyingFacilityAfterColumn = precedingColumn ? precedingColumn.name : null;
+        }
+
+        function isColumnBeforeSupplyingFacility(column) {
+            return vm.supplyingFacilityAfterColumn === column.name;
+        }
+
+        /**
+         * @ngdoc method
+         * @methodOf requisition-view-tab.controller:ViewTabController
+         * @name getSupplyingFacilityStockOnHand
+         *
+         * @description
+         * Returns the supplying-facility stock on hand to display for the given line item. The value follows
+         * the Packs/Doses toggle the same way the built-in stock on hand column does, so both cells always
+         * show the same unit. Returns a placeholder when no value is available.
+         *
+         * @param  {Object} lineItem the requisition line item
+         * @return {*}               the stock on hand in the selected quantity unit, or the placeholder
+         */
+        function getSupplyingFacilityStockOnHand(lineItem) {
+            if (!isPresent(lineItem.supplyingFacilityStockOnHand)) {
+                return vm.supplyingFacilityPlaceholder;
+            }
+            return requisition.recalculateQuantity(
+                lineItem.supplyingFacilityStockOnHand,
+                lineItem.orderable.netContent
+            );
+        }
+
+        function buildSupplyingFacilityHeader(facilities, hasStock) {
+            if (!facilities || !facilities.length) {
+                return messageService.get('requisitionViewTab.supplyingFacility.notConfigured');
+            }
+
+            var names = facilities.map(function(facility) {
+                return facility.name;
+            }).join(', ');
+
+            if (!hasStock) {
+                return messageService.get('requisitionViewTab.supplyingFacility.stockUnavailable', {
+                    facilities: names
+                });
+            }
+
+            return messageService.get('requisitionViewTab.supplyingFacility.name', {
+                facilities: names
+            });
+        }
+
+        function isPresent(value) {
+            return value !== null && value !== undefined;
         }
 
         function orderableHasMatchingName(orderableName, filterValue) {

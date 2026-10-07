@@ -265,6 +265,20 @@ describe('AddProductsModalController', function() {
             //then
             expect(item1.quantityInvalid).not.toBeDefined();
         });
+
+        it('should not assign error message when quantity is 0', function() {
+            //given
+            var item1 = {
+                quantityInvalid: 'blah'
+            };
+
+            //when
+            item1.quantity = 0;
+            vm.validate(item1);
+
+            //then
+            expect(item1.quantityInvalid).not.toBeDefined();
+        });
     });
 
     describe('confirm', function() {

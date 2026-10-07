@@ -10,7 +10,10 @@
   "stockPhysicalInventoryDraft.manufacturer": "Fabricante",
   "stockAdjustmentCreation.manufacturer": "Fabricante",
   "stockAddProductsModal.newLotManufactureDate": "Fecha de fabricación",
+  "stockAddProductsModal.manufactureDate": "Fecha de fabricación",
+  "stockEditLotModal.manufactureDate": "Fecha de fabricación",
   "stockEditLotModal.manufactureDateInvalid": "La fecha de fabricación del lote debe ser una fecha pasada.",
+  "stockEditLotModal.manufactureDateInvalidForLotCode": "Existe otra fecha de fabricación para este código.",
   "stockAddProductsModal.noLotsNoPermission": "Este producto no tiene lotes definidos.",
 
   "shipmentView.orderQuantity": "Cantidad ordenada (en paquetes)",
@@ -19,6 +22,9 @@
   "proofOfDeliveryView.quantityShipped": "Cantidad enviada (en paquetes)",
   "proofOfDeliveryView.quantityShippedInDoses": "Cantidad enviada (en dosis)",
   "proofOfDeliveryView.quantityRejected": "Cantidad rechazada",
+  "proofOfDeliveryView.shippedDate": "Fecha de envío",
+  "proofOfDeliveryView.receivedDateBeforeShippedDate": "La fecha de recepción no puede ser anterior a la fecha de envío (${shippedDate})",
+  "proofOfDeliveryView.receivedDateInFuture": "La fecha de recepción no puede ser posterior a la fecha actual",
 
   "requisitionView.createdDate": "Creado en",
   "requisitionView.latestStatusChange": "Último cambio de estado",
