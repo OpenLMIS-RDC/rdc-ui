@@ -60,6 +60,7 @@
                         hasQuantity ? item.quantity.toString() : '',
                         getLot(item, hasLot),
                         item.lot ? openlmisDateFilter(item.lot.expirationDate) : '',
+                        // ODRC-64 search by manufactureDate
                         item.lot ? openlmisDateFilter(item.lot.manufactureDate) : '',
                         item.assignment ? item.assignment.name : '',
                         safeGet(item.srcDstFreeText),
@@ -90,14 +91,6 @@
             event.lineItems = _.map(lineItems, function(item) {
                 return angular.merge({
                     orderableId: item.orderable.id,
-                    lotId: item.lot ? item.lot.id : null,
-                    lot: item.lot && !item.lot.id ? {
-                        lotCode: item.lot.lotCode,
-                        expirationDate: item.lot.expirationDate,
-                        manufactureDate: item.lot.manufactureDate,
-                        tradeItemId: item.lot.tradeItemId,
-                        active: item.lot.active
-                    } : undefined,
                     quantity: item.quantity,
                     extraData: {
                         vvmStatus: item.vvmStatus
@@ -105,11 +98,12 @@
                     occurredDate: item.occurredDate,
                     reasonId: item.reason ? item.reason.id : null,
                     reasonFreeText: item.reasonFreeText
-                }, buildSourceDestinationInfo(item, adjustmentType));
+                }, buildLotInfo(item), buildSourceDestinationInfo(item, adjustmentType));
             });
             return repository.create(event)
-                .then(function() {
+                .then(function(stockEventId) {
                     $rootScope.$emit('openlmis-referencedata.offline-events-indicator');
+                    return stockEventId;
                 });
         }
 
@@ -123,7 +117,45 @@
             if (adjustmentType.state === 'receive') {
                 return 'RECEIVE';
             }
+            if (adjustmentType.state === 'adjustment') {
+                return 'ADJUSTMENT';
+            }
             return null;
+        }
+
+        /**
+         * A lot without an id has not been recorded yet - a batch scanned on arrival, say. It travels
+         * as a code and expiry so the stock event can resolve or create it, which means a clerk does
+         * not need the administrative right that creating the lot up front requires. Lots that already
+         * exist are addressed by id exactly as before.
+         */
+        function buildLotInfo(item) {
+            if (item.lot && !item.lot.id && item.lot.lotCode) {
+                return {
+                    lotId: null,
+                    // ODRC-64 Allow user to define manufactureDate on new lot - STARTS HERE
+                    lot: {
+                        lotCode: item.lot.lotCode,
+                        expirationDate: toDateString(item.lot.expirationDate),
+                        manufactureDate: toDateString(item.lot.manufactureDate),
+                        tradeItemId: item.lot.tradeItemId,
+                        active: item.lot.active
+                    }
+                    // ODRC-64 Allow user to define manufactureDate on new lot - ENDS HERE
+                };
+            }
+
+            return {
+                lotId: item.lot ? item.lot.id : null
+            };
+        }
+
+        function toDateString(expirationDate) {
+            if (!expirationDate || angular.isString(expirationDate)) {
+                return expirationDate;
+            }
+
+            return dateUtils.toStringDate(expirationDate);
         }
 
         function buildSourceDestinationInfo(item, adjustmentType) {

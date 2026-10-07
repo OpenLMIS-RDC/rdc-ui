@@ -42,6 +42,7 @@
             ng-change="vm.expirationDateChanged()" 
             openlmis-invalid="{{vm.newLot.expirationDateInvalid | message}}"/>
           </div>
+           <!-- ODRC-64 new lot manufactureDate, ODRC-89 no product without lot - STARTS HERE -->
            <div ng-if="vm.hasPermissionToAddNewLot && vm.canAddNewLot">
                <label for="manufactureDate">{{'stockAddProductsModal.newLotManufactureDate' |
                    message}}</label>
@@ -53,6 +54,7 @@
             {{'stockAddProductsModal.noLotsNoPermission' | message}}
           </div>
           <button type="submit" class="add" ng-disabled="vm.cannotAddWithoutLot">{{'stockAddProductsModal.add' | message}}</button>
+          <!-- ODRC-64 new lot manufactureDate, ODRC-89 no product without lot - ENDS HERE -->
         </form>
         <section class="openlmis-table-container">
           <table>
@@ -60,10 +62,13 @@
             <tr>
               <th>{{'stockAddProductsModal.productCode' | message}}</th>
               <th>{{'stockAddProductsModal.product' | message}}</th>
+              <th>{{'stockAddProductsModal.packSize' | message}}</th>
               <th>{{'stockAddProductsModal.lotCode' | message}}</th>
               <th>{{'stockAddProductsModal.expiryDate' | message}}</th>
+              <!-- ODRC-64 Manufacture date column - STARTS HERE -->
               <th>{{'stockAddProductsModal.manufactureDate' | message}}</th>
-              <th>{{vm.showInDoses ? 'stockAddProductsModal.currentStockInDoses' : 'stockAddProductsModal.currentStockInPacks' | message}}</th>
+              <!-- ODRC-64 Manufacture date column - ENDS HERE -->
+              <th>{{'stockAddProductsModal.currentStock' | message}}</th>
               <th>{{'stockAddProductsModal.actions' | message}}</th>
             </tr>
             </thead>
@@ -71,16 +76,18 @@
             <tr ng-repeat="item in vm.addedItems">
               <td>{{item.orderable.productCode}}</td>
               <td>{{item.orderable.fullProductName}}</td>
+              <td>{{item.orderable.netContent}}</td>
               <td>{{item.displayLotMessage}}</td>
               <td>{{vm.formatDate(item.lot.expirationDate) | message}}</td>
+              <!-- ODRC-64 Manufacture date column - STARTS HERE -->
               <td>{{vm.formatDate(item.lot.manufactureDate) | message}}</td>
+              <!-- ODRC-64 Manufacture date column - ENDS HERE -->
               <td openlmis-invalid="{{item.quantityInvalid}}" class="digit-cell">
                 <openlmis-quantity-unit-input 
                             show-in-doses="vm.showInDoses" 
                             item="item"
                             net-content="item.orderable.netContent"
-                            on-change-quantity="vm.validate(item)"
-                            input-class="{'error': item.quantityInvalid}"/>
+                            on-change-quantity="vm.validate(item)"/>
               </td>
               <td>
                 <input type="button" class="danger" ng-click="vm.removeAddedProduct(item)"

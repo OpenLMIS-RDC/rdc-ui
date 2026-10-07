@@ -18,7 +18,7 @@ describe('StockAdjustmentCreationController', function() {
     var vm, q, rootScope, state, stateParams, facility, program, confirmService, VVM_STATUS, messageService, scope,
         stockAdjustmentCreationService, reasons, $controller, ADJUSTMENT_TYPE, ProgramDataBuilder, FacilityDataBuilder,
         ReasonDataBuilder, OrderableGroupDataBuilder, OrderableDataBuilder, alertService, notificationService,
-        orderableGroups, LotDataBuilder, UNPACK_REASONS, LotResource;
+        orderableGroups, LotDataBuilder, UNPACK_REASONS, LotResource, adjustmentScanService;
 
     beforeEach(function() {
 
@@ -35,6 +35,7 @@ describe('StockAdjustmentCreationController', function() {
                 set: function() {},
                 get: function() {}
             });
+            // ODRC-116 Display manufacturer column in stock views
             $provide.value('tradeItemManufacturerService',
                 jasmine.createSpyObj('tradeItemManufacturerService', ['prefetch', 'getManufacturer']));
         });
@@ -59,12 +60,17 @@ describe('StockAdjustmentCreationController', function() {
             LotDataBuilder = $injector.get('LotDataBuilder');
             UNPACK_REASONS = $injector.get('UNPACK_REASONS');
             LotResource = $injector.get('LotResource');
+            adjustmentScanService = $injector.get('adjustmentScanService');
             this.OrderableDataBuilder = $injector.get('OrderableDataBuilder');
             this.OrderableChildrenDataBuilder = $injector.get('OrderableChildrenDataBuilder');
             this.offlineService = $injector.get('offlineService');
             this.editLotModalService = $injector.get('editLotModalService');
             this.quantityUnitCalculateService = $injector.get('quantityUnitCalculateService');
+            this.signatureModalService = $injector.get('signatureModalService');
             spyOn(this.editLotModalService, 'show');
+            spyOn(this.signatureModalService, 'show').andReturn(q.resolve({
+                signature: 'Test Signature'
+            }));
 
             state = jasmine.createSpyObj('$state', ['go']);
             state.current = {
@@ -109,6 +115,10 @@ describe('StockAdjustmentCreationController', function() {
     describe('onInit', function() {
         it('should init page properly', function() {
             expect(stateParams.page).toEqual(0);
+        });
+
+        it('should expose the free-text max length', function() {
+            expect(vm.freeTextMaxLength).toBe(255);
         });
 
         it('should set showVVMStatusColumn to true if any orderable use vvm', function() {
@@ -211,6 +221,75 @@ describe('StockAdjustmentCreationController', function() {
             vm.validateQuantity(lineItem);
 
             expect(lineItem.$errors.quantityInvalid).toEqual('stockAdjustmentCreation.positiveInteger');
+        });
+
+        describe('in packs', function() {
+
+            beforeEach(function() {
+                vm.quantityUnit = 'PACKS';
+            });
+
+            it('should require a quantity when nothing was entered, and leave the inputs empty', function() {
+                var lineItem = {
+                    orderable: {
+                        netContent: 10
+                    },
+                    $errors: {}
+                };
+
+                vm.validateQuantity(lineItem);
+
+                expect(lineItem.$errors.quantityInvalid).toEqual('openlmisForm.required');
+                expect(lineItem.quantityInPacks).toBeUndefined();
+                expect(lineItem.quantity).toBeUndefined();
+            });
+
+            it('should require a quantity when only the fixed doses remainder of a pack size of 1 is set', function() {
+                var lineItem = {
+                    quantityRemainderInDoses: 0,
+                    orderable: {
+                        netContent: 1
+                    },
+                    $errors: {}
+                };
+
+                vm.validateQuantity(lineItem);
+
+                expect(lineItem.$errors.quantityInvalid).toEqual('openlmisForm.required');
+                expect(lineItem.quantityInPacks).toBeUndefined();
+                expect(lineItem.quantity).toBeUndefined();
+            });
+
+            it('should still reject zero packs typed in', function() {
+                var lineItem = {
+                    quantityInPacks: 0,
+                    quantityRemainderInDoses: 0,
+                    orderable: {
+                        netContent: 10
+                    },
+                    $errors: {}
+                };
+
+                vm.validateQuantity(lineItem);
+
+                expect(lineItem.$errors.quantityInvalid).toEqual('stockAdjustmentCreation.positiveInteger');
+            });
+
+            it('should count the packs entered', function() {
+                var lineItem = {
+                    quantityInPacks: 2,
+                    orderable: {
+                        netContent: 10
+                    },
+                    $errors: {}
+                };
+
+                vm.validateQuantity(lineItem);
+
+                expect(lineItem.quantity).toEqual(20);
+                expect(lineItem.$errors.quantityInvalid).toBe(false);
+            });
+
         });
     });
 
@@ -325,6 +404,134 @@ describe('StockAdjustmentCreationController', function() {
         expect(vm.addedLineItems).toEqual([lineItem2]);
     });
 
+    describe('validateDate', function() {
+
+        it('should set occurredDateInvalid when occurred date is undefined', function() {
+            var lineItem = {
+                occurredDate: undefined,
+                $errors: {}
+            };
+
+            vm.validateDate(lineItem);
+
+            expect(lineItem.$errors.occurredDateInvalid).toBe(true);
+        });
+
+        it('should set occurredDateInvalid when occurred date is null', function() {
+            var lineItem = {
+                occurredDate: null,
+                $errors: {}
+            };
+
+            vm.validateDate(lineItem);
+
+            expect(lineItem.$errors.occurredDateInvalid).toBe(true);
+        });
+
+        it('should set occurredDateInvalid when occurred date was cleared', function() {
+            var lineItem = {
+                occurredDate: '',
+                $errors: {}
+            };
+
+            vm.validateDate(lineItem);
+
+            expect(lineItem.$errors.occurredDateInvalid).toBe(true);
+        });
+
+        it('should not set occurredDateInvalid when occurred date is present', function() {
+            var lineItem = {
+                occurredDate: '2017-01-01',
+                $errors: {}
+            };
+
+            vm.validateDate(lineItem);
+
+            expect(lineItem.$errors.occurredDateInvalid).toBe(false);
+        });
+
+    });
+
+    describe('validateLineItem', function() {
+
+        beforeEach(function() {
+            this.emptyLineItem = {
+                orderable: {
+                    netContent: 1
+                },
+                $errors: {}
+            };
+        });
+
+        it('should mark every empty required field of an adjustment', function() {
+            vm.quantityUnit = 'DOSES';
+
+            vm.validateLineItem(this.emptyLineItem);
+
+            expect(this.emptyLineItem.$errors).toEqual({
+                quantityInvalid: 'openlmisForm.required',
+                occurredDateInvalid: true,
+                reasonInvalid: true
+            });
+        });
+
+        it('should mark every empty required field of an issue', function() {
+            vm = initController(orderableGroups, ADJUSTMENT_TYPE.ISSUE);
+            vm.quantityUnit = 'DOSES';
+
+            vm.validateLineItem(this.emptyLineItem);
+
+            expect(this.emptyLineItem.$errors).toEqual({
+                quantityInvalid: 'openlmisForm.required',
+                occurredDateInvalid: true,
+                assignmentInvalid: true,
+                // ODRC-94 a reason is required on issue
+                reasonInvalid: true
+            });
+        });
+
+        it('should clear the errors of a line item that has been filled in', function() {
+            var lineItem = {
+                quantity: 5,
+                occurredDate: '2017-01-01',
+                reason: reasons[0],
+                $previewSOH: 10,
+                orderable: {
+                    netContent: 1
+                },
+                $errors: {
+                    quantityInvalid: 'openlmisForm.required',
+                    occurredDateInvalid: true,
+                    reasonInvalid: true
+                }
+            };
+            vm.quantityUnit = 'DOSES';
+
+            vm.validateLineItem(lineItem);
+
+            expect(lineItem.$errors).toEqual({
+                quantityInvalid: false,
+                occurredDateInvalid: false,
+                reasonInvalid: false
+            });
+        });
+
+        it('should be run for every added line item on submit', function() {
+            var lineItem1 = angular.copy(this.emptyLineItem),
+                lineItem2 = angular.copy(this.emptyLineItem);
+            vm.addedLineItems = [lineItem1, lineItem2];
+            spyOn(vm, 'validateLineItem').andCallThrough();
+            spyOn(alertService, 'error');
+
+            vm.submit();
+
+            expect(vm.validateLineItem).toHaveBeenCalledWith(lineItem1);
+            expect(vm.validateLineItem).toHaveBeenCalledWith(lineItem2);
+            expect(alertService.error).toHaveBeenCalledWith('stockAdjustmentCreation.submitInvalid');
+        });
+
+    });
+
     describe('addProduct', function() {
 
         beforeEach(function() {
@@ -333,6 +540,7 @@ describe('StockAdjustmentCreationController', function() {
                     .build())
                 .withStockOnHand(2)
                 .build();
+            // ODRC-89 a lot has to be selected to add a product
             vm.selectedLot = vm.selectedOrderableGroup[0].lot;
             vm.addProduct();
         });
@@ -351,6 +559,7 @@ describe('StockAdjustmentCreationController', function() {
                     .build())
                 .withStockOnHand(10)
                 .build();
+            // ODRC-89 a lot has to be selected to add a product
             vm.selectedLot = vm.selectedOrderableGroup[0].lot;
             vm.addProduct();
 
@@ -361,6 +570,7 @@ describe('StockAdjustmentCreationController', function() {
             expect(addedLineItem.occurredDate).toEqual(vm.addedLineItems[1].occurredDate);
         });
 
+        // ODRC-89 Do not allow selecting product with no lot - STARTS HERE
         it('should not add a product when no lot is selected nor a new lot created', function() {
             vm.addedLineItems = [];
             vm.selectedLot = null;
@@ -414,6 +624,7 @@ describe('StockAdjustmentCreationController', function() {
             expect(vm.cannotAddWithoutLot).toBe(true);
         });
     });
+    // ODRC-89 Do not allow selecting product with no lot - ENDS HERE
 
     it('should search from added line items', function() {
         var lineItem1 = {
@@ -567,6 +778,55 @@ describe('StockAdjustmentCreationController', function() {
             expect(unpackingLineItem[0].quantity).toEqual(2);
         });
 
+        describe('with a lot that has not been recorded yet', function() {
+
+            beforeEach(function() {
+                spyOn(stockAdjustmentCreationService, 'submitAdjustments').andReturn(q.resolve());
+                spyOn(LotResource.prototype, 'create').andReturn(q.resolve({
+                    id: 'created-lot-id',
+                    lotCode: 'NEWLOT1'
+                }));
+
+                vm = initController(orderableGroups, ADJUSTMENT_TYPE.RECEIVE);
+                vm.quantityUnit = 'DOSES';
+                vm.addedLineItems = [{
+                    orderable: new OrderableDataBuilder().build(),
+                    lot: {
+                        lotCode: 'NEWLOT1',
+                        expirationDate: new Date(2027, 0, 30)
+                    },
+                    assignment: {
+                        id: 'source-id'
+                    },
+                    occurredDate: new Date(),
+                    quantity: 1,
+                    // ODRC-94 a reason is required on receive
+                    reason: {
+                        id: 'reason-id'
+                    },
+                    $isNewItem: true,
+                    $errors: {}
+                }];
+            });
+
+            it('should leave a scanned lot for the stock event to create', function() {
+                vm.addedLineItems[0].$deferLotCreation = true;
+
+                vm.submit();
+                rootScope.$apply();
+
+                expect(LotResource.prototype.create).not.toHaveBeenCalled();
+                expect(stockAdjustmentCreationService.submitAdjustments).toHaveBeenCalled();
+            });
+
+            it('should still create a lot entered by hand up front', function() {
+                vm.submit();
+                rootScope.$apply();
+
+                expect(LotResource.prototype.create).toHaveBeenCalled();
+            });
+        });
+
         it('should redirect with proper state params after success in offline mode', function() {
             this.offlineService.isOffline.andReturn(true);
 
@@ -585,6 +845,227 @@ describe('StockAdjustmentCreationController', function() {
             expect(notificationService.offline).toHaveBeenCalledWith('stockAdjustmentCreation.submittedOffline');
             expect(notificationService.success).not.toHaveBeenCalled();
             expect(alertService.error).not.toHaveBeenCalled();
+        });
+
+        it('should show signature modal for ISSUE', function() {
+            vm = initController(orderableGroups, ADJUSTMENT_TYPE.ISSUE);
+            spyOn(stockAdjustmentCreationService, 'submitAdjustments').andReturn(q.resolve());
+
+            vm.submit();
+            rootScope.$apply();
+
+            expect(this.signatureModalService.show).toHaveBeenCalled();
+        });
+
+        it('should show signature modal for RECEIVE', function() {
+            vm = initController(orderableGroups, ADJUSTMENT_TYPE.RECEIVE);
+            spyOn(stockAdjustmentCreationService, 'submitAdjustments').andReturn(q.resolve());
+
+            vm.submit();
+            rootScope.$apply();
+
+            expect(this.signatureModalService.show).toHaveBeenCalled();
+        });
+
+        it('should show signature modal for ADJUSTMENT', function() {
+            vm = initController(orderableGroups, ADJUSTMENT_TYPE.ADJUSTMENT);
+            spyOn(stockAdjustmentCreationService, 'submitAdjustments').andReturn(q.resolve());
+
+            vm.submit();
+            rootScope.$apply();
+
+            expect(this.signatureModalService.show).toHaveBeenCalled();
+        });
+
+        it('should not show signature modal for KIT_UNPACK', function() {
+            vm = initController(orderableGroups, ADJUSTMENT_TYPE.KIT_UNPACK);
+            spyOn(stockAdjustmentCreationService, 'submitAdjustments').andReturn(q.resolve());
+
+            vm.submit();
+            rootScope.$apply();
+
+            expect(this.signatureModalService.show).not.toHaveBeenCalled();
+        });
+
+        it('should pass collected signature to submitAdjustments for ISSUE', function() {
+            vm = initController(orderableGroups, ADJUSTMENT_TYPE.ISSUE);
+            this.signatureModalService.show.andReturn(q.resolve({
+                signature: 'Test Signature'
+            }));
+            spyOn(stockAdjustmentCreationService, 'submitAdjustments').andReturn(q.resolve());
+
+            vm.submit();
+            rootScope.$apply();
+
+            expect(stockAdjustmentCreationService.submitAdjustments).toHaveBeenCalledWith(
+                program.id, facility.id, jasmine.any(Array), ADJUSTMENT_TYPE.ISSUE, 'Test Signature'
+            );
+        });
+
+        it('should pass collected signature to submitAdjustments for ADJUSTMENT', function() {
+            vm = initController(orderableGroups, ADJUSTMENT_TYPE.ADJUSTMENT);
+            this.signatureModalService.show.andReturn(q.resolve({
+                signature: 'Test Signature'
+            }));
+            spyOn(stockAdjustmentCreationService, 'submitAdjustments').andReturn(q.resolve());
+
+            vm.submit();
+            rootScope.$apply();
+
+            expect(stockAdjustmentCreationService.submitAdjustments).toHaveBeenCalledWith(
+                program.id, facility.id, jasmine.any(Array), ADJUSTMENT_TYPE.ADJUSTMENT, 'Test Signature'
+            );
+        });
+
+        it('should not show confirmation modal for ISSUE', function() {
+            vm = initController(orderableGroups, ADJUSTMENT_TYPE.ISSUE);
+            spyOn(stockAdjustmentCreationService, 'submitAdjustments').andReturn(q.resolve());
+
+            vm.submit();
+            rootScope.$apply();
+
+            expect(confirmService.confirm).not.toHaveBeenCalled();
+            expect(this.signatureModalService.show).toHaveBeenCalled();
+        });
+
+        it('should not show confirmation modal for RECEIVE', function() {
+            vm = initController(orderableGroups, ADJUSTMENT_TYPE.RECEIVE);
+            spyOn(stockAdjustmentCreationService, 'submitAdjustments').andReturn(q.resolve());
+
+            vm.submit();
+            rootScope.$apply();
+
+            expect(confirmService.confirm).not.toHaveBeenCalled();
+            expect(this.signatureModalService.show).toHaveBeenCalled();
+        });
+
+        it('should not show confirmation modal for ADJUSTMENT', function() {
+            vm = initController(orderableGroups, ADJUSTMENT_TYPE.ADJUSTMENT);
+            spyOn(stockAdjustmentCreationService, 'submitAdjustments').andReturn(q.resolve());
+
+            vm.submit();
+            rootScope.$apply();
+
+            expect(confirmService.confirm).not.toHaveBeenCalled();
+            expect(this.signatureModalService.show).toHaveBeenCalled();
+        });
+
+        it('should show confirmation modal for KIT_UNPACK', function() {
+            vm = initController(orderableGroups, ADJUSTMENT_TYPE.KIT_UNPACK);
+            spyOn(stockAdjustmentCreationService, 'submitAdjustments').andReturn(q.resolve());
+
+            vm.submit();
+            rootScope.$apply();
+
+            expect(confirmService.confirm).toHaveBeenCalled();
+            expect(this.signatureModalService.show).not.toHaveBeenCalled();
+        });
+
+        it('should not submit if signature modal is dismissed for ISSUE', function() {
+            vm = initController(orderableGroups, ADJUSTMENT_TYPE.ISSUE);
+            this.signatureModalService.show.andReturn(q.reject());
+            spyOn(stockAdjustmentCreationService, 'submitAdjustments').andReturn(q.resolve());
+
+            vm.submit();
+            rootScope.$apply();
+
+            expect(stockAdjustmentCreationService.submitAdjustments).not.toHaveBeenCalled();
+        });
+
+        describe('print stock event report', function() {
+
+            beforeEach(inject(function($injector) {
+                this.$window = $injector.get('$window');
+                this.accessTokenFactory = $injector.get('accessTokenFactory');
+                this.stockmanagementUrlFactory = $injector.get('stockmanagementUrlFactory');
+                this.localStorageService = $injector.get('localStorageService');
+
+                spyOn(this.$window, 'open');
+                spyOn(this.accessTokenFactory, 'addAccessToken').andCallFake(function(url) {
+                    return url;
+                });
+                spyOn(this.localStorageService, 'get').andReturn('en');
+            }));
+
+            it('should offer printing and open the report for ISSUE', function() {
+                vm = initController(orderableGroups, ADJUSTMENT_TYPE.ISSUE);
+                spyOn(stockAdjustmentCreationService, 'submitAdjustments')
+                    .andReturn(q.resolve('stock-event-id'));
+
+                vm.submit();
+                rootScope.$apply();
+
+                expect(confirmService.confirm).toHaveBeenCalledWith(
+                    'stockIssueCreation.printModal.label',
+                    'stockIssueCreation.printModal.yes',
+                    'stockIssueCreation.printModal.no'
+                );
+
+                expect(this.$window.open).toHaveBeenCalledWith(
+                    this.stockmanagementUrlFactory('/api/stockEvents/stock-event-id/print?lang=en'),
+                    '_blank'
+                );
+
+                expect(state.go).toHaveBeenCalledWith('openlmis.stockmanagement.stockCardSummaries', {
+                    facility: facility.id,
+                    program: program.id,
+                    active: 'ACTIVE'
+                });
+            });
+
+            it('should still redirect when user declines the print modal for RECEIVE', function() {
+                vm = initController(orderableGroups, ADJUSTMENT_TYPE.RECEIVE);
+                confirmService.confirm.andCallFake(function(message) {
+                    if (message === 'stockReceiveCreation.printModal.label') {
+                        return q.reject();
+                    }
+                    return q.resolve();
+                });
+                spyOn(stockAdjustmentCreationService, 'submitAdjustments')
+                    .andReturn(q.resolve('stock-event-id'));
+
+                vm.submit();
+                rootScope.$apply();
+
+                expect(this.$window.open).not.toHaveBeenCalled();
+                expect(state.go).toHaveBeenCalledWith('openlmis.stockmanagement.stockCardSummaries', {
+                    facility: facility.id,
+                    program: program.id,
+                    active: 'ACTIVE'
+                });
+            });
+
+            it('should not offer printing for ADJUSTMENT', function() {
+                vm = initController(orderableGroups, ADJUSTMENT_TYPE.ADJUSTMENT);
+                spyOn(stockAdjustmentCreationService, 'submitAdjustments')
+                    .andReturn(q.resolve('stock-event-id'));
+
+                vm.submit();
+                rootScope.$apply();
+
+                expect(this.$window.open).not.toHaveBeenCalled();
+                expect(state.go).toHaveBeenCalledWith('openlmis.stockmanagement.stockCardSummaries', {
+                    facility: facility.id,
+                    program: program.id,
+                    active: 'ACTIVE'
+                });
+            });
+
+            it('should not offer printing when no stock event id is returned', function() {
+                vm = initController(orderableGroups, ADJUSTMENT_TYPE.ISSUE);
+                spyOn(stockAdjustmentCreationService, 'submitAdjustments')
+                    .andReturn(q.resolve());
+
+                vm.submit();
+                rootScope.$apply();
+
+                expect(this.$window.open).not.toHaveBeenCalled();
+                expect(state.go).toHaveBeenCalledWith('openlmis.stockmanagement.stockCardSummaries', {
+                    facility: facility.id,
+                    program: program.id,
+                    active: 'ACTIVE'
+                });
+            });
         });
     });
 
@@ -625,12 +1106,14 @@ describe('StockAdjustmentCreationController', function() {
             expect(vm.newLot.expirationDate).not.toBeDefined();
         });
 
+        // ODRC-64 Allow user to define manufactureDate on new lot - STARTS HERE
         it('should clear new lot manufacture date', function() {
             vm.newLot.manufactureDate = new Date() + 1;
             vm.lotChanged();
 
             expect(vm.newLot.manufactureDate).not.toBeDefined();
         });
+        // ODRC-64 Allow user to define manufactureDate on new lot - ENDS HERE
 
         it('should set canAddNewLot as true', function() {
             vm.selectedLot = new LotDataBuilder()
@@ -649,6 +1132,256 @@ describe('StockAdjustmentCreationController', function() {
         });
     });
 
+    describe('scanning', function() {
+
+        beforeEach(function() {
+            this.group = new OrderableGroupDataBuilder()
+                .withOrderable(new OrderableDataBuilder().build())
+                .build();
+            this.lot = this.group[0].lot;
+            vm.orderableGroups = [this.group];
+        });
+
+        /**
+         * The screen hands the scan layer its own rows and callbacks rather than letting it reach into
+         * the controller, so the layer stays screen-agnostic.
+         */
+        it('should offer its own rows and callbacks to the scan layer', function() {
+            var strategy;
+
+            spyOn(adjustmentScanService, 'resolve').andReturn(q.resolve());
+            vm.onScan({
+                gtin: '05890123456786'
+            }, {
+                id: 'trade-item-id'
+            }, ADJUSTMENT_TYPE.RECEIVE);
+
+            strategy = adjustmentScanService.resolve.mostRecentCall.args[3];
+
+            expect(strategy.orderableGroups).toBe(vm.orderableGroups);
+            expect(strategy.lineItems).toBe(vm.addedLineItems);
+            expect(strategy.onCounted).toBe(vm.validateQuantity);
+            expect(angular.isFunction(strategy.addLine)).toBe(true);
+        });
+
+        describe('addLine', function() {
+
+            function addLine(group, lot) {
+                var strategy;
+
+                spyOn(adjustmentScanService, 'resolve').andReturn(q.resolve());
+                vm.onScan({
+                    gtin: '05890123456786'
+                }, {
+                    id: 'trade-item-id'
+                }, ADJUSTMENT_TYPE.RECEIVE);
+                strategy = adjustmentScanService.resolve.mostRecentCall.args[3];
+
+                return strategy.addLine(group, lot);
+            }
+
+            it('should add a line for a batch that already exists', function() {
+                var added = addLine(this.group, this.lot);
+
+                expect(added).toBe(vm.addedLineItems[0]);
+                expect(added.lot.id).toEqual(this.lot.id);
+                expect(added.$deferLotCreation).toBeFalsy();
+            });
+
+            /**
+             * An unrecorded batch is prefilled into the new lot form the manual add reads, then left
+             * for the stock event to create rather than being created up front.
+             */
+            it('should add an unrecorded batch and leave it for the stock event', function() {
+                var added = addLine(this.group, {
+                    lotCode: 'NEWLOT1',
+                    expirationDate: new Date(2027, 0, 30)
+                });
+
+                expect(added.lot.lotCode).toEqual('NEWLOT1');
+                expect(added.lot.id).toBeUndefined();
+                expect(added.$isNewItem).toBe(true);
+                expect(added.$deferLotCreation).toBe(true);
+            });
+
+            /**
+             * Whatever the user had half typed into the new lot form must not leak into a scanned line,
+             * and must still be there when they go back to it.
+             */
+            it('should set aside a half typed batch and put it back', function() {
+                var pending = {
+                    lotCode: 'HALFTYPED',
+                    expirationDate: new Date(2029, 5, 1)
+                };
+
+                vm.newLot = pending;
+                addLine(this.group, {
+                    lotCode: 'NEWLOT1',
+                    expirationDate: new Date(2027, 0, 30)
+                });
+
+                expect(vm.newLot).toBe(pending);
+                expect(vm.addedLineItems[0].lot.lotCode).toEqual('NEWLOT1');
+            });
+
+            // ODRC-89 Do not allow selecting product with no lot - STARTS HERE
+            it('should not add a line for a product tracked without batches', function() {
+                var countBefore = vm.addedLineItems.length;
+
+                expect(addLine(this.group, undefined)).toBeUndefined();
+                expect(vm.addedLineItems.length).toEqual(countBefore);
+            });
+            // ODRC-89 Do not allow selecting product with no lot - ENDS HERE
+
+            it('should report nothing when the add was refused', function() {
+                var countBefore = vm.addedLineItems.length;
+
+                spyOn(vm, 'addProduct');
+
+                expect(addLine(this.group, this.lot)).toBeUndefined();
+                expect(vm.addedLineItems.length).toEqual(countBefore);
+            });
+        });
+
+        describe('outcome', function() {
+
+            function scan(resolved) {
+                spyOn(adjustmentScanService, 'resolve').andReturn(q.resolve(resolved));
+
+                return vm.onScan({
+                    gtin: '05890123456786'
+                }, {
+                    id: 'trade-item-id'
+                }, ADJUSTMENT_TYPE.RECEIVE);
+            }
+
+            function settle(outcome) {
+                var settled = {};
+
+                outcome.then(function(value) {
+                    settled.value = value;
+                }, function(rejection) {
+                    settled.rejection = rejection;
+                });
+                rootScope.$apply();
+
+                return settled;
+            }
+
+            function addLine(group, lot) {
+                return adjustmentScanService.resolve.mostRecentCall.args[3].addLine(group, lot);
+            }
+
+            it('should resolve with the line the scan counted', function() {
+                var lineItem = {
+                        quantity: 84
+                    },
+                    settled = settle(scan(lineItem));
+
+                expect(settled.value).toBe(lineItem);
+                expect(settled.rejection).toBeUndefined();
+            });
+
+            it('should refuse a batch whose label has expired, with the wording the form shows',
+                function() {
+                    var outcome = scan(),
+                        countBefore = vm.addedLineItems.length,
+                        settled;
+
+                    addLine(this.group, {
+                        lotCode: 'EXPIRED1',
+                        expirationDate: '2020-01-01'
+                    });
+                    settled = settle(outcome);
+
+                    expect(settled.rejection).toEqual('stockEditLotModal.expirationDateInvalid');
+                    expect(vm.addedLineItems.length).toEqual(countBefore);
+                });
+
+            it('should refuse a batch code the form would refuse', function() {
+                var outcome = scan(),
+                    settled;
+
+                addLine(this.group, {
+                    lotCode: 'DUPLICATE1',
+                    expirationDate: '2027-01-30'
+                });
+                addLine(this.group, {
+                    lotCode: 'DUPLICATE1',
+                    expirationDate: '2027-11-30'
+                });
+                settled = settle(outcome);
+
+                expect(settled.rejection).toEqual('stockEditLotModal.lotCodeInvalid');
+            });
+
+            it('should not carry a refusal over to the next scan', function() {
+                var refused = scan(),
+                    accepted;
+
+                addLine(this.group, {
+                    lotCode: 'EXPIRED1',
+                    expirationDate: '2020-01-01'
+                });
+
+                expect(settle(refused).rejection).toEqual('stockEditLotModal.expirationDateInvalid');
+
+                adjustmentScanService.resolve.andReturn(q.resolve());
+                accepted = vm.onScan({
+                    gtin: '05890123456786'
+                }, {
+                    id: 'trade-item-id'
+                }, ADJUSTMENT_TYPE.RECEIVE);
+                addLine(this.group, {
+                    lotCode: 'NEWLOT1',
+                    expirationDate: '2027-11-30'
+                });
+
+                expect(settle(accepted).rejection).toBeUndefined();
+            });
+        });
+    });
+
+    describe('canEditLot', function() {
+
+        beforeEach(function() {
+            this.lineItem = {
+                lot: new LotDataBuilder().build(),
+                $isNewItem: true
+            };
+        });
+
+        it('should allow editing a new lot given the right to add lots', function() {
+            expect(vm.canEditLot(this.lineItem)).toBe(true);
+        });
+
+        it('should not allow editing a lot the facility already recorded', function() {
+            this.lineItem.$isNewItem = false;
+
+            expect(vm.canEditLot(this.lineItem)).toBe(false);
+        });
+
+        it('should not allow editing a line without a lot', function() {
+            this.lineItem.lot = undefined;
+
+            expect(vm.canEditLot(this.lineItem)).toBe(false);
+        });
+
+        it('should not allow editing a new lot without the right to add lots', function() {
+            vm.hasPermissionToAddNewLot = false;
+
+            expect(vm.canEditLot(this.lineItem)).toBe(false);
+        });
+
+        it('should allow editing a lot the stock event will create, without that right', function() {
+            vm.hasPermissionToAddNewLot = false;
+            this.lineItem.$deferLotCreation = true;
+
+            expect(vm.canEditLot(this.lineItem)).toBe(true);
+        });
+    });
+
+    // ODRC-89 hasPermissionToAddNewLot can be overridden
     function initController(orderableGroups, adjustmentType, hasPermissionToAddNewLot) {
         return $controller('StockAdjustmentCreationController', {
             $scope: scope,
@@ -666,5 +1399,23 @@ describe('StockAdjustmentCreationController', function() {
             editLotModalService: this.editLotModalService
         });
     }
+
+});
+
+describe('adjustment-creation.html', function() {
+
+    beforeEach(function() {
+        module('openlmis-templates');
+
+        inject(function($injector) {
+            this.template = angular.element('<div></div>')
+                .html($injector.get('$templateCache').get('stock-adjustment-creation/adjustment-creation.html'));
+        });
+    });
+
+    it('should validate a line item when the user leaves its row', function() {
+        expect(this.template.find('tr[ng-repeat="lineItem in vm.items"]').attr('on-row-leave'))
+            .toEqual('vm.validateLineItem(lineItem)');
+    });
 
 });

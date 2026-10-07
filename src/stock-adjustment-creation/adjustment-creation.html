@@ -3,6 +3,7 @@
 </h2>
 
 <div class="stock-adjustment-creation">
+    <!-- ODRC-64 Responsive add product form -->
     <section class="openlmis-table-container" ng-class="{'add-new-lot-form-visible': vm.canAddNewLot}">
         <form ng-submit="vm.search()">
             <fieldset>
@@ -12,8 +13,10 @@
 
             <input type="submit" value="{{vm.key('search') | message}}"/>
         </form>
+        <!-- ODRC-64 Responsive add product form -->
         <section class="is-primary add-product-form">
             <form class="form-inline" ng-submit="vm.addProduct()" name="productForm">
+                <!-- ODRC-64 Responsive add product form with new lot manufactureDate, ODRC-89 no product without lot - STARTS HERE -->
                 <div class="add-product-form-inputs">
                     <div>
                         <label for="productSelect">{{vm.key('product') | message}}</label>
@@ -56,35 +59,47 @@
                     </div>
                 </div>
                 <button type="submit" class="add" ng-disabled="vm.cannotAddWithoutLot">{{vm.key('add') | message}}</button>
+                <!-- ODRC-64 Responsive add product form with new lot manufactureDate, ODRC-89 no product without lot - ENDS HERE -->
             </form>
         </section>
+        <div class="stock-scan-toolbar-item">
+            <openlmis-gtin-scan-input
+                ng-if="vm.scanEnabled"
+                mode="{{vm.scanMode}}"
+                on-scan="vm.onScan(scan, tradeItem, mode)">
+            </openlmis-gtin-scan-input>
+        </div>
         <quantity-unit-toggle class="is-primary" quantity-unit="vm.quantityUnit"></quantity-unit-toggle>
-        <table suppress-tr-openlmis-invalid>
+        <table>
             <caption ng-if="!vm.displayItems.length">{{vm.key('noProducts') | message}}</caption>
             <thead>
                 <tr>
                     <th>{{vm.key('productCode') | message}}</th>
                     <th>{{vm.key('product') | message}}</th>
+                    <th>{{vm.key('packSize') | message}}</th>
                     <th ng-show="vm.hasLot">{{vm.key('lotCode') | message}}</th>
                     <th ng-show="vm.hasLot">{{vm.key('expiryDate') | message}}</th>
+                    <!-- ODRC-64 / ODRC-116 Manufacture date and manufacturer columns - STARTS HERE -->
                     <th ng-show="vm.hasLot">{{vm.key('manufactureDate') | message}}</th>
                     <th ng-show="vm.hasLot">{{vm.key('manufacturer') | message}}</th>
-                    <th>{{vm.showInDoses() ? vm.key('sohDoses') : vm.key('sohPacks') | message}}</th>
+                    <!-- ODRC-64 / ODRC-116 Manufacture date and manufacturer columns - ENDS HERE -->
+                    <th>{{vm.key('soh') | message}}</th>
                     <th ng-show="vm.srcDstAssignments">{{vm.key('srcDstLabel') | message}}</th>
                     <th ng-show="vm.srcDstAssignments">{{vm.key('srcDstComments') | message}}</th>
                     <th ng-if="vm.showReasonDropdown">{{vm.key('reason') | message}}</th>
                     <th ng-if="vm.showReasonDropdown">{{vm.key('reasonComments') | message}}</th>
-                    <th>{{vm.showInDoses() ? vm.key('quantityDoses') : vm.key('quantityPacks') | message}}</th>
-                    <th ng-if="!vm.showInDoses()">{{vm.key('totalQuantityInDoses') | message}}</th>
+                    <th>{{vm.key('quantity') | message}}</th>
+                    <th ng-if="!vm.showInDoses()">{{vm.key('totalQuantity') | message}}</th>
                     <th ng-if="vm.showVVMStatusColumn">{{vm.key('vvmStatus') | message}}</th>
                     <th>{{vm.key('date') | message}}</th>
                     <th>{{vm.key('actions') | message}}</th>
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="lineItem in vm.items">
+                <tr ng-repeat="lineItem in vm.items" on-row-leave="vm.validateLineItem(lineItem)">
                     <td>{{lineItem.orderable.productCode}}</td>
                     <td>{{lineItem.orderable | productName}}</td>
+                    <td align="right">{{lineItem.orderable.netContent}}</td>
                     <td ng-show="vm.hasLot && vm.canEditLot(lineItem)">
                         <button class="edit" ng-click="vm.editLot(lineItem)">
                             {{lineItem.displayLotMessage}}
@@ -94,10 +109,12 @@
                         {{lineItem.displayLotMessage}}
                     </td>
                     <td ng-show="vm.hasLot">{{vm.formatDate(lineItem.lot.expirationDate) | message}}</td>
+                    <!-- ODRC-64 / ODRC-116 Manufacture date and manufacturer columns - STARTS HERE -->
                     <td ng-show="vm.hasLot">{{vm.formatDate(lineItem.lot.manufactureDate) | message}}</td>
                     <td ng-show="vm.hasLot">
                         <rdc-manufacturer orderable="lineItem.orderable" lot="lineItem.lot"></rdc-manufacturer>
                     </td>
+                    <!-- ODRC-64 / ODRC-116 Manufacture date and manufacturer columns - ENDS HERE -->
                     <td align="right">{{vm.recalculateSOHQuantity(lineItem.$previewSOH, lineItem.orderable.netContent)}}</td>
                     <td ng-show="vm.srcDstAssignments" openlmis-invalid="{{lineItem.$errors.assignmentInvalid ? 'openlmisForm.required' : '' | message}}">
                         <select ng-model="lineItem.assignment"
@@ -106,7 +123,9 @@
                         </select>
                     </td>
                     <td ng-show="vm.srcDstAssignments">
-                        <textarea ng-show="lineItem.assignment.isFreeTextAllowed" ng-model="lineItem.srcDstFreeText" rows="1" cols="15"></textarea>
+                        <textarea class="openlmis-long-text" characters-left
+                            ng-attr-maxlength="{{vm.freeTextMaxLength}}" ng-maxlength="{{vm.freeTextMaxLength}}"
+                            ng-show="lineItem.assignment.isFreeTextAllowed" ng-model="lineItem.srcDstFreeText" rows="1"></textarea>
                     </td>
                     <td ng-if="vm.showReasonDropdown" openlmis-invalid="{{lineItem.$errors.reasonInvalid ? 'openlmisForm.required' : '' | message}}" class="digit-cell">
                         <select ng-model="lineItem.reason"
@@ -115,15 +134,16 @@
                         </select>
                     </td>
                     <td ng-if="vm.showReasonDropdown">
-                        <input type="text" ng-show="lineItem.reason.isFreeTextAllowed" ng-model="lineItem.reasonFreeText" rows="1" cols="15"></input>
+                        <textarea class="openlmis-long-text" characters-left
+                            ng-attr-maxlength="{{vm.freeTextMaxLength}}" ng-maxlength="{{vm.freeTextMaxLength}}"
+                            ng-show="lineItem.reason.isFreeTextAllowed" ng-model="lineItem.reasonFreeText" rows="1"></textarea>
                     </td>
-                    <td class="digit-cell" openlmis-invalid="{{lineItem.$errors.quantityInvalid ? lineItem.$errors.quantityInvalid : '' | message}}">
+                    <td class="digit-cell" openlmis-invalid="{{lineItem.$errors.quantityInvalid ? lineItem.$errors.quantityInvalid : ''}}">
                         <openlmis-quantity-unit-input
                                 show-in-doses="vm.showInDoses()"
                                 item="lineItem"
                                 net-content="lineItem.orderable.netContent"
-                                on-change-quantity="vm.validateQuantity(lineItem)"
-                                input-class=""/>
+                                on-change-quantity="vm.validateQuantity(lineItem)"/>
                     </td>
                     <td ng-if="!vm.showInDoses()">{{lineItem.quantity}}</td>
                     <td ng-if="vm.showVVMStatusColumn">
@@ -133,9 +153,9 @@
                             placeholder="{{'stockAdjustmentCreation.selectStatus' | message}}">
                         </select>
                     </td>
-                    <td class="date-cell">
+                    <td class="date-cell" openlmis-invalid="{{lineItem.$errors.occurredDateInvalid ? 'openlmisForm.required' : '' | message}}">
                         <input id="lineItem.occurredDate" type="date" ng-model="lineItem.occurredDate"
-                            ng-change="vm.validateDate(lineItem)" max-date="vm.maxDate" required inputmode="none"/>
+                            ng-change="vm.validateDate(lineItem)" max-date="vm.maxDate" inputmode="none"/>
                     </td>
                     <td>
                         <button type="button" class="danger" ng-click="vm.remove(lineItem)">{{vm.key('remove') | message}}</button>
