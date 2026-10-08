@@ -1,7 +1,7 @@
 {
   "service": {
     "Name": "rdc-reference-ui",
-    "Id": "reference-ui-service",
+    "Id": "rdc-reference-ui-service",
     "Port": 80,
     "Tags": ["openlmis-service"],
     "check": {
