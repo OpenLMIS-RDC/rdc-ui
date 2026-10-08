@@ -48,7 +48,7 @@
         vm.getStatusDisplayName = getStatusDisplayName;
         vm.getReasonName = getReasonName;
         vm.printProofOfDelivery = printProofOfDelivery;
-        // RDC customization: shipped quantity in doses
+        // RDC customization ODRC-158: shipped quantity in doses
         vm.getQuantityShipped = getQuantityShipped;
         // ODRC-155 Received date must not precede the shipment - STARTS HERE
         vm.getReceivedDateError = getReceivedDateError;
@@ -253,7 +253,7 @@
                 });
         }
 
-        // RDC customization: shipped quantity in doses
+        // RDC customization ODRC-158: shipped quantity in doses
         /**
          * @ngdoc method
          * @methodOf proof-of-delivery-view.controller:ProofOfDeliveryViewController

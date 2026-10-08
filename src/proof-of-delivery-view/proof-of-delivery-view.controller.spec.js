@@ -234,7 +234,7 @@ describe('PodViewController', function() {
         });
     });
 
-    // RDC customization: shipped quantity in doses
+    // RDC customization ODRC-158: shipped quantity in doses
     describe('getQuantityShipped', function() {
 
         var lineItem;

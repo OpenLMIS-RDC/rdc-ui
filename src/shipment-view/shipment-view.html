@@ -38,7 +38,7 @@
                 <th>{{'shipmentView.lotCode' | message}}</th>
                 <th>{{'shipmentView.vvmStatus' | message}}</th>
                 <th>{{'shipmentView.expiryDate' | message}}</th>
-                <!-- RDC customization: order quantity in packs and in doses; no unit popovers, the unit toggle above is off -->
+                <!-- RDC customization ODRC-158: order quantity in packs and in doses; no unit popovers, the unit toggle above is off -->
                 <th>{{'shipmentView.orderQuantity' | message}}</th>
                 <th>{{'shipmentView.orderQuantityInDoses' | message}}</th>
                 <th>{{'shipmentView.fillQuantityInPack' | message}}</th>
@@ -54,7 +54,7 @@
                 <td ng-if="tableLineItem.isLot">{{tableLineItem.lot | lotCode}}</td>
                 <td>{{vm.getVvmStatusLabel(tableLineItem.vvmStatus) | message}}</td>
                 <td>{{tableLineItem.lot.expirationDate | openlmisDate}}</td>
-                <!-- RDC customization: order quantity in packs and in doses -->
+                <!-- RDC customization ODRC-158: order quantity in packs and in doses -->
                 <td>{{tableLineItem.getOrderQuantity(false)}}</td>
                 <td>{{tableLineItem.getOrderQuantity(true)}}</td>
                 <td ng-if="!tableLineItem.shipmentLineItem">{{tableLineItem.getFillQuantity()}}</td>
