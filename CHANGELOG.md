@@ -5,7 +5,7 @@
 * [ODRC-157](https://openlmis.atlassian.net/browse/ODRC-157) Remove the packs/doses suffix from requisition column headers, as in core; add the missing manufacture date translations in the lot modals
 * [ODRC-132](https://openlmis.atlassian.net/browse/ODRC-132) Support embedded Superset dashboards
 * [ODRC-119](https://openlmis.atlassian.net/browse/ODRC-119) Allow adding a product with quantity 0 in the physical inventory Add Products modal
-* [ODRC-158](https://openlmis.atlassian.net/browse/ODRC-158) Show order and shipped quantities in packs and in doses on the shipment and Proof of Delivery views; the Proof of Delivery Print button uses the RDC Proof of Delivery template of the report service
+* [ODRC-158](https://openlmis.atlassian.net/browse/ODRC-158) Show order and shipped quantities in packs and in doses on the shipment and Proof of Delivery views
 
 1.0.1 / 2026-06-26
 =================
