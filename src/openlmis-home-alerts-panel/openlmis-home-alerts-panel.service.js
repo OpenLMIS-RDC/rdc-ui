@@ -61,10 +61,12 @@
                 'SKIPPED', 'INITIATED', 'SUBMITTED', 'AUTHORIZED', 'IN_APPROVAL',
                 'APPROVED', 'REJECTED', 'RELEASED', 'RELEASED_WITHOUT_ORDER'
             ];
+            // ODRC-101 Remove status In Route from Orders panel - STARTS HERE
             var orderOrder = [
                 'CREATING', 'ORDERED', 'FULFILLING', 'READY_TO_PACK',
-                'SHIPPED', 'RECEIVED', 'TRANSFER_FAILED'
+                'SHIPPED', 'RECEIVED', 'TRANSFER_FAILED', 'CANCELLED'
             ];
+            // ODRC-101 Remove status In Route from Orders panel - ENDS HERE
 
             var order = tableName === 'requisition' ? requisitionOrder : orderOrder;
 
