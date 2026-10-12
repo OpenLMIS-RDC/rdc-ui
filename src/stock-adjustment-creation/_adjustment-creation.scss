@@ -1,6 +1,7 @@
 .stock-adjustment-creation .toolbar {
     display: grid;
-    grid-template-columns: auto 1fr auto;
+    // GTIN scan input (stockmanagement-ui 2.2.0) gets its own column next to the filters
+    grid-template-columns: auto auto 1fr auto;
     align-items: end;
     gap: 0.5em;
     width: 100%;
@@ -12,8 +13,13 @@
         grid-row: 1;
     }
 
-    .add-product-form {
+    .stock-scan-toolbar-item {
         grid-column: 2;
+        grid-row: 1;
+    }
+
+    .add-product-form {
+        grid-column: 3;
         grid-row: 1;
 
         .add-product-form-inputs {
@@ -27,7 +33,7 @@
     }
 
     quantity-unit-toggle {
-        grid-column: 3;
+        grid-column: 4;
         grid-row: 1;
 
         label {

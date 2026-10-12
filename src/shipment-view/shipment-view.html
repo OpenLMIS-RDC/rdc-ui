@@ -27,9 +27,9 @@
     </ul>
 </aside>
 <form class="openlmis-table-container" id="shipmentForm" ng-submit="vm.shipment.confirm()">
-    <!-- ODRC-90 Fulfillment - manage PoD packs/doses feature does not work
-    <quantity-unit-toggle class="is-primary" quantity-unit="vm.quantityUnit"></quantity-unit-toggle>
-    -->
+    <!-- ODRC-90 Fulfillment - manage PoD packs/doses feature does not work - STARTS HERE -->
+    <!-- <quantity-unit-toggle class="is-primary" quantity-unit="vm.quantityUnit"></quantity-unit-toggle> -->
+    <!-- ODRC-90 Fulfillment - manage PoD packs/doses feature does not work - ENDS HERE -->
     <table>
         <thead>
             <tr>
@@ -45,7 +45,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr ng-repeat="tableLineItem in vm.tableLineItems" ng-class="{'is-secondary': tableLineItem.isMainGroup}" empty-row="tableLineItem.noStockAvailable" empty-row-message="{{'shipmentView.noStockAvailable' | message}}" empty-row-col-span="9">
+            <tr ng-repeat="tableLineItem in vm.tableLineItems" ng-class="{'is-secondary': tableLineItem.isMainGroup, 'is-child': tableLineItem.isChild}" empty-row="tableLineItem.noStockAvailable" empty-row-message="{{'shipmentView.noStockAvailable' | message}}" empty-row-col-span="9">
                 <td>{{tableLineItem.productCode}}</td>
                 <td>{{tableLineItem.productName}}</td>
                 <td ng-if="!tableLineItem.isLot"></td>
@@ -56,6 +56,7 @@
                 <td ng-if="!tableLineItem.shipmentLineItem">{{tableLineItem.getFillQuantity()}}</td>
                 <td ng-if="tableLineItem.shipmentLineItem">
                     <input ng-show="vm.shipment.isEditable()" positive-integer ng-model="tableLineItem.shipmentLineItem.quantityShipped"
+                        aria-label="{{'shipmentView.fillQuantityInPack' | message}}"
                         ng-class="{'is-invalid': tableLineItem.shipmentLineItem.isInvalid().quantityShipped}"
                         openlmis-invalid="{{tableLineItem.shipmentLineItem.isInvalid().quantityShipped | message}}"/>
                     <div ng-show="!vm.shipment.isEditable()">{{tableLineItem.shipmentLineItem.quantityShipped}}</div>
@@ -70,6 +71,7 @@
     <div class="button-group primary">
         <button ng-show="vm.shipment.canBeConfirmed()" form="shipmentForm" class="primary">{{'shipmentView.confirmShipment' | message}}</button>
         <button ng-show="vm.shipment.id" class="danger" ng-click="vm.shipment.delete()">{{'shipmentView.deleteDraft' | message}}</button>
+        <button ng-show="vm.canCancelOrder()" class="danger" type="button" ng-click="vm.cancelOrder()">{{'shipmentView.cancelOrder' | message}}</button>
     </div>
     <button ng-click="vm.shipment.save()">{{'shipmentView.saveDelete' | message}}</button>
     <button ng-show="vm.shipment.isEditable()" ng-click="vm.printShipment()">{{'shipmentView.generatePickPackList' | message}}</button>

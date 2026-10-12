@@ -55,9 +55,10 @@
                     <th>{{'proofOfDeliveryView.lotCode' | message}}</th>
                     <th>{{'proofOfDeliveryView.quantityAccepted' | message}}</th>
                     <th ng-if="vm.showVvmColumn">{{'proofOfDeliveryView.vvmStatus' | message}}</th>
-                    <!-- ODRC-87 Stock returned over POD process -->
+                    <!-- ODRC-87 Stock returned over POD process - STARTS HERE -->
                     <!-- <th>{{'proofOfDeliveryView.quantityReturned' | message}}</th> -->
                     <th>{{'proofOfDeliveryView.quantityRejected' | message}}</th>
+                    <!-- ODRC-87 Stock returned over POD process - ENDS HERE -->
                     <th>{{'proofOfDeliveryView.rejectionReason' | message}}</th>
                     <th>{{'proofOfDeliveryView.notes' | message}}</th>
                 </tr>
@@ -126,10 +127,10 @@
                         {{vm.getReasonName(fulfillingLineItem.rejectionReasonId)}}
                     </td>
                     <td ng-if="vm.canEdit">
-                        <input type="text" ng-model="fulfillingLineItem.notes"/>
+                        <textarea class="openlmis-long-text" ng-model="fulfillingLineItem.notes"></textarea>
                     </td>
                     <td ng-if="!vm.canEdit">
-                        {{fulfillingLineItem.notes}}
+                        <span class="openlmis-long-text">{{fulfillingLineItem.notes}}</span>
                     </td>
                 </tr>
             </tbody>            

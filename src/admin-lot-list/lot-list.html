@@ -1,9 +1,10 @@
 <h2>{{'adminLotList.lots' | message}}</h2>
 <section class="openlmis-table-container">
-    <!-- ODRC-124 Temporary lot management - add lot button -->
+    <!-- ODRC-124 Temporary lot management - add lot button - STARTS HERE -->
     <button id="add-lot" class="add" ui-sref="openlmis.administration.lots.add">
         {{'adminLotList.addLot' | message}}
     </button>
+    <!-- ODRC-124 Temporary lot management - add lot button - ENDS HERE -->
     <form ng-submit="vm.search()">
         <fieldset class="form-group">
             <label for="expirationDateFrom">{{'adminLotList.expirationDateFrom' | message}}</label>
@@ -15,10 +16,12 @@
         </fieldset>
         <fieldset class="form-group">
             <label for="product">{{'adminLotList.product' | message}}</label>
+            <!-- ODRC-124 Product code in the product dropdown - STARTS HERE -->
             <select id="product"
                     ng-model="vm.orderableId"
                     ng-options="o.id as (o.fullProductName + ' (' + o.productCode + ')') for o in vm.orderables | orderBy:'productCode'">
             </select>
+            <!-- ODRC-124 Product code in the product dropdown - ENDS HERE -->
         </fieldset>
         <input type="submit" value="{{'adminLotList.search' | message}}"/>
     </form>
