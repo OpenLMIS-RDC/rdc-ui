@@ -1,5 +1,6 @@
 1.0.2 (WIP)
 =================
+* [ODRC-163](https://openlmis.atlassian.net/browse/ODRC-163) Physical inventory keeps a lot created during a failed save or submit, so it is no longer sent as 'no lot defined'
 * [ODRC-167](https://openlmis.atlassian.net/browse/ODRC-167) Upgrade UI modules to OpenLMIS 3.20 (reference-ui 5.2.15) and re-apply the RDC overrides
 * [ODRC-155](https://openlmis.atlassian.net/browse/ODRC-155) Restrict POD received date to the range between the shipment date and today
 * [ODRC-124](https://openlmis.atlassian.net/browse/ODRC-124) Temporary lot management - add lot button in lot list view
