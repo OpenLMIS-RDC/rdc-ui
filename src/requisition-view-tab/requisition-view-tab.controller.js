@@ -356,11 +356,12 @@
             return column.name === TEMPLATE_COLUMNS.PRODUCT_NAME;
         }
 
-        // ODRC-108 Requisition headers should be translated
         function getLabelForColumn(column) {
+            // ODRC-108 Requisition headers and tooltips should be translated - STARTS HERE
             var key = 'requisition.columnLabel.' + column.name;
             var translated = messageService.get(key);
             return translated === key ? column.label : translated;
+            // ODRC-108 Requisition headers and tooltips should be translated - ENDS HERE
         }
 
         /**
@@ -375,6 +376,7 @@
          * @return {string}                    the translated description of the column
          */
         function getDescriptionForColumn(column) {
+            // ODRC-108 Requisition headers and tooltips should be translated - STARTS HERE
             var key = 'requisition.columnDescription.' + column.name;
             var translated = messageService.get(key);
             var translatedDescription = translated === key ? column.definition : translated;
@@ -384,6 +386,7 @@
                     messageService.get('requisitionViewTab.totalLossesAndAdjustment.disabled');
             }
             return translatedDescription;
+            // ODRC-108 Requisition headers and tooltips should be translated - ENDS HERE
         }
 
         /**
@@ -637,12 +640,9 @@
         function computeSupplyingFacilityColumnPosition(orderedColumns) {
             vm.supplyingFacilityAfterColumn = null;
 
-            var supplyingFacilityColumn;
-            columns.forEach(function(column) {
-                if (column.name === SUPPLYING_FACILITY_STOCK_ON_HAND) {
-                    supplyingFacilityColumn = column;
-                }
-            });
+            // Read the column from the template: getColumns drops columns flagged $fullSupplyOnly, so the
+            // tab's columns omit it for emergency requisitions and on the non-full supply tab.
+            var supplyingFacilityColumn = requisition.template.getColumn(SUPPLYING_FACILITY_STOCK_ON_HAND);
             if (!supplyingFacilityColumn) {
                 return;
             }
