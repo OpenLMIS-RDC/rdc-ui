@@ -17,6 +17,11 @@
   "stockEditLotModal.manufactureDateInvalidForLotCode": "There exists another manufacture date for this code.",
   "stockAddProductsModal.noLotsNoPermission": "This product has no lots defined.",
 
+  "shipmentView.orderQuantity": "Order Quantity (in Packs)",
+  "shipmentView.orderQuantityInDoses": "Order Quantity (in Doses)",
+
+  "proofOfDeliveryView.quantityShipped": "Quantity Shipped (in Packs)",
+  "proofOfDeliveryView.quantityShippedInDoses": "Quantity Shipped (in Doses)",
   "proofOfDeliveryView.quantityRejected": "Quantity Rejected",
   "proofOfDeliveryView.shippedDate": "Shipped Date",
   "proofOfDeliveryView.receivedDateBeforeShippedDate": "Received date cannot be earlier than the shipped date (${shippedDate})",

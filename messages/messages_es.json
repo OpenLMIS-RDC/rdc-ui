@@ -16,6 +16,11 @@
   "stockEditLotModal.manufactureDateInvalidForLotCode": "Existe otra fecha de fabricación para este código.",
   "stockAddProductsModal.noLotsNoPermission": "Este producto no tiene lotes definidos.",
 
+  "shipmentView.orderQuantity": "Cantidad ordenada (en paquetes)",
+  "shipmentView.orderQuantityInDoses": "Cantidad ordenada (en dosis)",
+
+  "proofOfDeliveryView.quantityShipped": "Cantidad enviada (en paquetes)",
+  "proofOfDeliveryView.quantityShippedInDoses": "Cantidad enviada (en dosis)",
   "proofOfDeliveryView.quantityRejected": "Cantidad rechazada",
   "proofOfDeliveryView.shippedDate": "Fecha de envío",
   "proofOfDeliveryView.receivedDateBeforeShippedDate": "La fecha de recepción no puede ser anterior a la fecha de envío (${shippedDate})",
