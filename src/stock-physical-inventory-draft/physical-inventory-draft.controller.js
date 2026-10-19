@@ -612,7 +612,8 @@
         function saveLots(draft, submitMethod) {
             var lotPromises = [],
                 lotResource = new LotResource(),
-                errorLots = [];
+                errorLots = [],
+                otherErrors = [];
 
             draft.lineItems.forEach(function(lineItem) {
                 if (lineItem.lot && lineItem.$isNewItem && !lineItem.lot.id) {
@@ -639,7 +640,9 @@
                                 });
                                 return;
                             }
-                            return $q.reject(response);
+                            // RDC customization: don't reject early, so the lots created so far are still cached
+                            // Delete after upgrading stockmanagement-ui past 2.2.0
+                            otherErrors.push(response);
                         }));
                 }
             });
@@ -652,8 +655,8 @@
                     if (lotPromises.length) {
                         vm.cacheDraft();
                     }
-                    if (errorLots !== undefined && errorLots.length > 0) {
-                        return $q.reject();
+                    if (errorLots !== undefined && errorLots.length > 0 || otherErrors.length > 0) {
+                        return $q.reject(otherErrors[0]);
                     }
                     responses.forEach(function(lot) {
                         draft.lineItems.forEach(function(lineItem) {
