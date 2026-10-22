@@ -648,25 +648,18 @@
             });
 
             return $q.all(lotPromises)
-                .then(function(responses) {
+                .then(function() {
                     // RDC customization: cache the created lots, otherwise leaving the page restores them
                     // from the cache as new lots without id.
                     // Delete after upgrading stockmanagement-ui past 2.2.0
                     if (lotPromises.length) {
                         vm.cacheDraft();
                     }
-                    if (errorLots !== undefined && errorLots.length > 0 || otherErrors.length > 0) {
+                    if (errorLots.length > 0 || otherErrors.length > 0) {
                         return $q.reject(otherErrors[0]);
                     }
-                    responses.forEach(function(lot) {
-                        draft.lineItems.forEach(function(lineItem) {
-                            if (lineItem.lot && lineItem.lot.lotCode === lot.lotCode
-                                && lineItem.orderable.identifiers['tradeItem'] === lot.tradeItemId) {
-                                lineItem.lot = lot;
-                            }
-                        });
-                        return draft.lineItems;
-                    });
+                    // RDC customization: created lots are already set on their line items above
+                    // Delete after upgrading stockmanagement-ui past 2.2.0
                     return submitMethod();
                 })
                 .catch(function(errorResponse) {
