@@ -20,7 +20,9 @@
 
   "proofOfDeliveryView.quantityShipped": "Quantité livrée (conditionnement)",
   "proofOfDeliveryView.quantityShippedInDoses": "Quantité livrée (doses)",
-  "proofOfDeliveryView.quantityRejected": "Quantité rejetée",
+  "proofOfDeliveryView.quantityAccepted": "Quantité reçue",
+  "proofOfDeliveryView.quantityRejected": "Écart",
+  "proofOfDeliveryView.rejectionReason": "Motif de l’écart",
   "proofOfDeliveryView.shippedDate": "Date d'expédition",
   "proofOfDeliveryView.receivedDateBeforeShippedDate": "La date de réception ne peut pas être antérieure à la date d'expédition (${shippedDate})",
   "proofOfDeliveryView.receivedDateInFuture": "La date de réception ne peut pas être dans le futur",
@@ -50,6 +52,7 @@
   "stockConstants.stage3": "Étape 3",
   "stockConstants.stage4": "Étape 4",
 
+  "stockCard.adjustment": "Quantité",
   "stockCard.soh": "Stock disponible",
 
   "oneNetworkIntegration.configuration": "One Network Integration",

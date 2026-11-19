@@ -22,7 +22,9 @@
 
   "proofOfDeliveryView.quantityShipped": "Quantity Shipped (in Packs)",
   "proofOfDeliveryView.quantityShippedInDoses": "Quantity Shipped (in Doses)",
-  "proofOfDeliveryView.quantityRejected": "Quantity Rejected",
+  "proofOfDeliveryView.quantityAccepted": "Quantity Received",
+  "proofOfDeliveryView.quantityRejected": "Gap",
+  "proofOfDeliveryView.rejectionReason": "Gap Reason",
   "proofOfDeliveryView.shippedDate": "Shipped Date",
   "proofOfDeliveryView.receivedDateBeforeShippedDate": "Received date cannot be earlier than the shipped date (${shippedDate})",
   "proofOfDeliveryView.receivedDateInFuture": "Received date cannot be in the future",
@@ -48,5 +50,6 @@
   "stockConstants.stage3": "Stage 3",
   "stockConstants.stage4": "Stage 4",
 
+  "stockCard.adjustment": "Quantity",
   "stockCard.soh": "Stock on Hand"
 }
