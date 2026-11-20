@@ -27,6 +27,8 @@
   "proofOfDeliveryView.receivedDateBeforeShippedDate": "La date de réception ne peut pas être antérieure à la date d'expédition (${shippedDate})",
   "proofOfDeliveryView.receivedDateInFuture": "La date de réception ne peut pas être dans le futur",
 
+  "report.dateInFuture": "La date ne peut pas être dans le futur",
+
   "shipmentView.fillQuantityInPack": "Quantité à  expédier (conditionnement)",
   "shipmentView.orderQuantity": "Quantité commandée (conditionnement)",
   "shipmentView.orderQuantityInDoses": "Quantité commandée (doses)",
