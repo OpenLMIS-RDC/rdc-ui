@@ -28,13 +28,14 @@
         .module('report')
         .controller('ReportGenerateController', controller);
 
+    // RDC customization ODRC-148: $filter is injected for the future-date check
     controller.$inject = [
         '$state', '$scope', '$window', 'report', 'reportFactory', '$timeout',
-        'reportParamsOptions', 'reportUrlFactory', 'accessTokenFactory',  '$q', 'messageService'
+        'reportParamsOptions', 'reportUrlFactory', 'accessTokenFactory',  '$q', 'messageService', '$filter'
     ];
 
     function controller($state, $scope, $window, report, reportFactory, $timeout,
-                        reportParamsOptions, reportUrlFactory, accessTokenFactory, $q, messageService) {
+                        reportParamsOptions, reportUrlFactory, accessTokenFactory, $q, messageService, $filter) {
         var vm = this;
 
         vm.$onInit = onInit;
@@ -44,6 +45,9 @@
         vm.reinitializeSelect = reinitializeSelect;
 
         vm.getParameterLabel = getParameterLabel;
+
+        // RDC customization ODRC-148: report dates cannot be in the future
+        vm.getDateError = getDateError;
 
         vm.paramsInfo = {
             GeographicZone: 'report.geographicZoneInfo',
@@ -135,6 +139,19 @@
          */
         vm.format = 'pdf';
 
+        // RDC customization ODRC-148: report dates cannot be in the future
+        /**
+         * @ngdoc property
+         * @propertyOf report.controller:ReportGenerateController
+         * @name maxDate
+         * @type {Date}
+         *
+         * @description
+         * Upper boundary passed to the datepickers - today. Placed at midday, so the datepicker
+         * re-projecting it through the configured timezone keeps the same calendar day.
+         */
+        vm.maxDate = undefined;
+
         /**
          * @ngdoc method
          * @methodOf report.controller:ReportGenerateController
@@ -203,11 +220,41 @@
          * Initialization method of the ReportGenerateController.
          */
         function onInit() {
+            // RDC customization ODRC-148: report dates cannot be in the future
+            vm.maxDate = new Date();
+            vm.maxDate.setHours(12, 0, 0, 0);
+
             angular.forEach(report.templateParameters, function(param) {
                 angular.forEach(param.dependencies, function(dependency) {
                     watchDependency(param, dependency);
                 });
             });
+        }
+
+        // RDC customization ODRC-148: report dates cannot be in the future
+        /**
+         * @ngdoc method
+         * @methodOf report.controller:ReportGenerateController
+         * @name getDateError
+         *
+         * @description
+         * Returns a translated error message if the date selected for the given parameter is later
+         * than today. Returning a non-empty message through the openlmis-invalid attribute marks the
+         * field - and therefore the whole form - as invalid, which stops the report from being
+         * generated.
+         *
+         * @param  {String} parameterName the name of the date parameter
+         * @return {String}               the error message, or undefined if the date is acceptable
+         */
+        function getDateError(parameterName) {
+            var date = vm.selectedParamsOptions[parameterName],
+                today = $filter('date')(new Date(), 'yyyy-MM-dd');
+
+            // Both sides are ISO dates in the user's local timezone, so they compare as strings.
+            if (date && date > today) {
+                return messageService.get('report.dateInFuture');
+            }
+            return undefined;
         }
 
         /**

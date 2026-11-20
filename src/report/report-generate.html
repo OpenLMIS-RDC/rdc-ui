@@ -5,9 +5,11 @@
         ng-repeat-start="parameter in vm.report.templateParameters">{{vm.getParameterLabel(parameter)}}</label>
 
     <!-- Date Picker -->
+    <!-- RDC customization ODRC-148: report dates cannot be in the future -->
     <input id="{{parameter.name}}"
         ng-if="parameter.description == 'datepickers' &&  parameter.description != 'booleanSelect'" type="date"
-        ng-model="vm.selectedParamsOptions[parameter.name]" ng-required="{{parameter.required}}" />
+        ng-model="vm.selectedParamsOptions[parameter.name]" ng-required="{{parameter.required}}"
+        max-date="vm.maxDate" openlmis-invalid="{{vm.getDateError(parameter.name)}}" />
 
     <!-- Select -->
     <select id="{{parameter.name}}"

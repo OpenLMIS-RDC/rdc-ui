@@ -29,6 +29,8 @@
   "proofOfDeliveryView.receivedDateBeforeShippedDate": "Received date cannot be earlier than the shipped date (${shippedDate})",
   "proofOfDeliveryView.receivedDateInFuture": "Received date cannot be in the future",
 
+  "report.dateInFuture": "Date cannot be in the future",
+
   "requisitionView.geographicZoneLevel": "Geographic level",
   "requisitionView.geographicZone": "Geographic zone",
   "requisitionView.createdDate": "Created at",
